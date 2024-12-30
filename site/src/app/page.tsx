@@ -4,9 +4,7 @@ export default function Home() {
   return (
     <div>
 
-      <div>
-        
-      </div>
+      <Image priority src="logo.svg" height={32} width={32} alt="GBC Logo"/>
 
     </div>
   );
