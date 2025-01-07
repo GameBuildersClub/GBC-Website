@@ -18,7 +18,7 @@ export default function Navigation () {
                         <Link href="/"> Games </Link>
                         <Link href="/"> About Us </Link>
                         <Link href="/"> How it Works </Link>
-                        <Link href="/"> FAQ </Link>
+                        <Link href="/frequently-asked-questions"> FAQ </Link>
                         <Link href="/"> Contact </Link>
                     </div>
                 </div>
