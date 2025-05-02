@@ -1,9 +1,41 @@
+'use client'
+
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useCallback, useEffect } from "react";
+
 
 import { poppins } from "../fonts/poppins";
 
+// https://github.com/vercel/next.js/discussions/14810#discussioncomment-8606715
+
 export default function Navigation () {
+    const useMediaQuery = (width: number) => {
+        const [targetReached, setTargetReached] = useState(false);
+      
+        const updateTarget = useCallback((e: MediaQueryListEvent) => {
+          if (e.matches) {
+            setTargetReached(true);
+          } else {
+            setTargetReached(false);
+          }
+        }, []);
+      
+        useEffect(() => {
+          const media = window.matchMedia(`(max-width: ${width}px)`);
+          media.addEventListener("change", updateTarget);
+      
+          if (media.matches) {
+            setTargetReached(true);
+          }
+      
+          return () => media.removeEventListener("change", updateTarget);
+        }, []);
+      
+        return targetReached;
+    };
+
     return(
         <div className="bg-darkGrey flex flex-col">
 
@@ -13,6 +45,7 @@ export default function Navigation () {
                     {/* The svg has some strange artifacts around the edges of the letters which will need to be resolved eventually */}
                     <Image className="mr-7" priority src="logo.svg" height={60} width={60} alt="GBC Logo"/>
 
+                    {/* Navigation Links to different sections of the home page + other pages */}
                     <div className={`${poppins.className} flex flex-row gap-8 text-white items-center text-lg`}>
                         <Link href="/"> Home </Link>
                         <Link href="/"> Games </Link>
