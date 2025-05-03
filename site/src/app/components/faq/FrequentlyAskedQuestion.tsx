@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+import { outfit } from "../../fonts/outfit";
+import { poppins } from "../../fonts/poppins";
+
 interface FrequentlyAskedQuestionsProp {
     question: string;
     answer: string;
@@ -16,17 +19,18 @@ export default function FrequentlyAskedQuestion( {question, answer}:FrequentlyAs
     // a question's corresponding answer
     const handleClick = () => {
         setIsclicked(!isClicked);
-}
+    }
     
     return(
         <div className="cursor-pointer">
-            {/* Clickable */}
+            {/* This div contains the question and is clickable. When clicked, it'll reveal or unreveal the corresonding answer */}
             <div onClick={handleClick}>
-                <h1 className="text-darkGrey">{question}</h1>
+                {/* Question content */}
+                <h1 className={`text-2xl ${outfit.className} ${isClicked ? 'text-primary' : `text-darkGrey`}`}>{question}</h1>
             </div>
             
-            {/* Display answer if clicked */}
-            {isClicked && <p>{answer}</p>}
+            {/* Answer content */}
+            {isClicked && <p className={`${poppins.className}`}>{answer}</p>}
             
         </div>
     );
