@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import Navigation from "../components/Navigation";
 
-import FrequentlyAskedQuestion from "../components/faq/FrequentlyAskedQuestion";
+import FrequentlyAskedQuestion from "../components/FrequentlyAskedQuestion";
 
 import { data } from "./data";
 
