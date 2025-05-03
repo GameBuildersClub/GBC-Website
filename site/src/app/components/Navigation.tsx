@@ -32,7 +32,7 @@ export default function Navigation () {
             </div>
 
             {/* Red Accent */}
-            <div className="bg-darkRed h-1"> </div>
+            <div className="bg-primary h-1"> </div>
            
             
         </div>

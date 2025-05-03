@@ -1,6 +1,12 @@
+'use client'
+
 import Image from "next/image";
 
 import Navigation from "../components/Navigation";
+
+import FrequentlyAskedQuestion from "../components/faq/FrequentlyAskedQuestion";
+
+import { data } from "./data";
 
 import { outfit } from "../fonts/outfit";
 
@@ -17,6 +23,8 @@ export default function FAQ () {
                 <h1 className={`absolute left-20 top-32 text-white text-5xl ${outfit.className}`}>Frequently Asked Questions</h1>
             </div>
 
+            {/* Map data of frequently asked questions to the corresponding component */}
+            { data.map((entry, index) => <FrequentlyAskedQuestion question={entry.question} answer={entry.answer} key={index}/> )}
             
         </div>
     );
