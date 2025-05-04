@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Image from "next/image";
 
@@ -10,10 +10,11 @@ import { poppins } from "../fonts/poppins";
 interface FrequentlyAskedQuestionsProp {
     question: string;
     answer: string;
+    expandState: boolean;
 }
 
 
-export default function FrequentlyAskedQuestion( {question, answer}:FrequentlyAskedQuestionsProp ) {
+export default function FrequentlyAskedQuestion( {question, answer, expandState}:FrequentlyAskedQuestionsProp ) {
     const [isClicked, setIsclicked] = useState(false)
     const [isHovering, setIsHovering] = useState(false)
 
@@ -31,6 +32,11 @@ export default function FrequentlyAskedQuestion( {question, answer}:FrequentlyAs
     const handleOnMouseLeave = () => {
         setIsHovering(false)
     }
+
+    // Listen for when the EXPAND ALL option is clicked
+    useEffect(() => {
+        setIsclicked(expandState)
+    }, [expandState]);
     
     return(
         <div className="cursor-pointer my-3">

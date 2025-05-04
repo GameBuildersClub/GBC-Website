@@ -13,7 +13,7 @@ export const faq = [
     },
     {
         question: "What game engines are used?",
-        answer: "We have used Godot, Unity, and Unreal Engine to create games. However, game engine usage is not limited to these three as it is up to a team leader’s discretion."
+        answer: "We have used Godot, Unity, and Unreal Engine to create games. However, game engine usage is not limited to these three and is up to a team leader’s discretion."
     },
     {
         question: "Is there a deadline to join semester projects?",
