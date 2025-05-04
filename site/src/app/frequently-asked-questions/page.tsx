@@ -9,6 +9,9 @@ import FrequentlyAskedQuestion from "../components/FrequentlyAskedQuestion";
 import { data } from "./data";
 
 import { outfit } from "../fonts/outfit";
+import { poppins } from "../fonts/poppins";
+
+// Inspriation https://www.admissions.uga.edu/admissions/first-year/first-year-faq/
 
 export default function FAQ () {
     return(
@@ -24,8 +27,11 @@ export default function FAQ () {
             </div>
 
             {/* Map data of frequently asked questions to the corresponding component */}
-            { data.map((entry, index) => <FrequentlyAskedQuestion question={entry.question} answer={entry.answer} key={index}/> )}
-            
+            <div className="flex flex-col mx-72 mt-8">
+                <p className={`${poppins.className}`}> Below you will find some commonly asked questions about Game Builders Club. If you still have further questions, please reach out to us via Discord or email.</p>
+
+                { data.map((entry, index) => <FrequentlyAskedQuestion question={entry.question} answer={entry.answer} key={index}/> )}
+            </div>
         </div>
     );
 }
