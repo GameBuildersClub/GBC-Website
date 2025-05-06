@@ -1,3 +1,71 @@
-.image {
-    width: fit-content; 
+.container {
+    width: 100%;
+    height: 40rem;
+    aspect-ratio: 10 / 4;
+    position: relative;
 }
+
+.textContainer {
+    display: block;
+    position: absolute;
+    left: 45;
+    top: 27%
+}
+
+.h1 {
+    all: unset;
+    color: white;
+    font-weight: 400;
+    font-size: 96;
+    letter-spacing: 3;
+    top: 1/2;
+}
+
+.h2 {
+    all: unset;
+    display: block;
+    color: white;
+    font-weight: 400;
+    font-size: 24;
+    margin-left: 1%;
+    margin-top: -2%;
+    font-weight: 350;
+}
+
+.dim {
+    display: block;
+    position: absolute;
+    background-color: #3C3C3C;
+    width: 100%;
+    height: 100%;
+    opacity: 35%;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.buttonLeft {
+    all: unset;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+    width: 25%;
+}
+
+.buttonRight {
+    all: unset;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
+    width: 25%;
+}
+
