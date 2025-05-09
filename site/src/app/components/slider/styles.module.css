@@ -10,15 +10,15 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    left: 45;
-    top: 27%
+    left: 20;
+    top: 30%
 }
 
 .h1 {
     all: unset;
     display: block;
     color: white;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 96;
     letter-spacing: 3;
     top: 1/2;
@@ -28,7 +28,7 @@
     all: unset;
     display: block;
     color: white;
-    font-weight: 400;
+    font-weight: bold;
     font-size: 24;
     margin-left: 1%;
     margin-top: -2%;
