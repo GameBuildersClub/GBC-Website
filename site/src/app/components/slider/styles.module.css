@@ -8,12 +8,15 @@
 .textContainer {
     display: block;
     position: absolute;
+    display: flex;
+    flex-direction: column;
     left: 45;
     top: 27%
 }
 
 .h1 {
     all: unset;
+    display: block;
     color: white;
     font-weight: 400;
     font-size: 96;
@@ -107,3 +110,48 @@
     }
 }
 
+@media only screen and (max-width: 800) {
+
+    .textContainer {
+        left: 50%;
+        transform: translate(-50%);
+    }
+
+    .h1 {
+        font-size: 56;
+        white-space: nowrap;
+    }
+    
+    .h2 {
+        font-size: 18;
+    }
+
+    .container {
+        height: 50vh;
+    }
+
+    .indexButton {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media only screen and (max-width: 550) {
+    .h1 {
+        font-size: 48;
+        white-space: nowrap;
+    }
+
+    .textContainer {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@media only screen and (max-width: 400)  {
+    .h1 {
+        font-size: 38;
+        white-space: nowrap;
+    }
+}

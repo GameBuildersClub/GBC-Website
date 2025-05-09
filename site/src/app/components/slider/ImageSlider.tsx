@@ -9,8 +9,7 @@ import { useState, useEffect } from "react";
 import { outfit } from "@/app/fonts/outfit";
 import { poppins } from "@/app/fonts/poppins";
 
-
-export default function LandingCarousel() {
+export default function ImageSlider() {
 
     const [imageIndex, setImageIndex] = useState(0)
     const [isHover, setIsHover] = useState(false);
@@ -37,6 +36,7 @@ export default function LandingCarousel() {
 
     return(
         <div onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} className={styles.container}>
+            
             {/* Images */}
             <div className={styles.slider}>
                 {images.map(url => (
@@ -64,7 +64,6 @@ export default function LandingCarousel() {
                     </button>
                 ))}
             </div>
-
             
         </div>
     );
