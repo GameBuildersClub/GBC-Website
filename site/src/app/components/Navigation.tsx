@@ -37,7 +37,7 @@ export default function Navigation () {
     };
 
     return(
-        <div className="bg-darkGrey flex flex-col">
+        <div className="bg-darkGrey flex flex-col w-full">
 
         <div className="flex flex-row justify-between mx-14">
                 {/* Left Side of Navigation Bar, comprising of logo and links */}
@@ -47,7 +47,6 @@ export default function Navigation () {
 
                     {/* Navigation Links to different sections of the home page + other pages */}
                     <div className={`${poppins.className} flex flex-row gap-8 text-white items-center text-lg`}>
-                        <Link href="/"> Home </Link>
                         <Link href="/"> Games </Link>
                         <Link href="/"> About Us </Link>
                         <Link href="/"> How it Works </Link>
@@ -57,11 +56,11 @@ export default function Navigation () {
                 </div>
 
                 {/* Right Side of Navigation Bar, featuring social medias */}
-                <div className="flex flex-row gap-x-4 items-center">
+                {!useMediaQuery(960) && <div className="flex flex-row gap-x-4 items-center">
                     <Link className="flex-shrink-0" href="https://x.com/GameBuilderClub" target="_blank"> <Image priority src="twitter.svg" height={30} width={30} alt="X (Formerly Twitter) Logo"/> </Link>
                     <Link className="flex-shrink-0" href="https://www.instagram.com/gamebuildersclub/" target="_blank"> <Image priority src="instagram.svg" height={27} width={27} alt="Instagram Logo"/> </Link>
                     <Link className="flex-shrink-0" href="https://discord.gg/ZZU5xQbv8K" target="_blank"> <Image priority src="discord.svg" height={35} width={35} alt="Discord Logo"/> </Link>
-                </div>
+                </div>}
             </div>
 
             {/* Red Accent */}
