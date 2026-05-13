@@ -81,7 +81,7 @@ const OFFICERS = [
   { name: "TBD", initials: "?", role: "Finance Officer" },
   { name: "Divesh", initials: "D", role: "Web Dev Officer" },
 ];
-const MEETINGS = [{ day: "Wednesday", kind: "Workshop / Social / Project Work", time: "6:30 - 8:00 PM", location: "SLC 345" }];
+const MEETINGS = [{ day: "Wednesday", kind: "Workshop / Social / Project Work", time: "6:30 - 8:00 PM", location: "SLC 345 · Hybrid" }];
 const STEPS = [{ num: "01", title: "Join the Discord", body: "The fastest way in. Project channels, voice rooms, jam announcements all live there." }, { num: "02", title: "Week 1 is intro night", body: "Come meet the club, learn how the semester works, and get familiar with the project process." }, { num: "03", title: "Week 2 is pitch night", body: "Project leads pitch their game ideas, then members pick preferences through a Google Form." }, { num: "04", title: "Week 3 is team announcements", body: "Teams are announced based on what people selected, then project work days begin." }];
 const FAQS = [
   { q: "Do I need programming experience to join?", a: "No programming experience is necessary. About a third of our members are artists, writers, or musicians. We need every one of those skills on a typical project." },
