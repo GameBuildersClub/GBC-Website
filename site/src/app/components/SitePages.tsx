@@ -153,8 +153,8 @@ function GameArt({ game }: { game: Game }) {
 function EngineIcon({ engine, size = 24 }: { engine: string; size?: number }) {
   const e = ENGINES.find((x) => x.id === engine);
   if (!e) return null;
-  if (e.icon) return <div className="engine-logo" style={{ width: size, height: size }}><Image src={e.icon} alt={e.label} title={e.label} width={size} height={size} /></div>;
-  return <div title={e.label} style={{ width: size, height: size, borderRadius: "50%", background: "#222", color: "#fff", display: "grid", placeItems: "center", fontFamily: "var(--f-display)", fontSize: 10, fontWeight: 600 }}>{engine === "unreal" ? "UE" : "<>"}</div>;
+  if (e.icon) return <div className="engine-logo"><Image src={e.icon} alt={e.label} title={e.label} width={size} height={size} style={{ width: "auto", height: "auto" }} /></div>;
+  return <div className="engine-logo-fallback" title={e.label}>{engine === "unreal" ? "UE" : "<>"}</div>;
 }
 
 function GameCard({ game }: { game: Game }) {
@@ -200,7 +200,20 @@ function Stats() {
 
 function RecentGames({ games }: { games: Game[] }) {
   const kicker = games.length > 0 ? latestSemester(games[0]) : "";
-  return <section className="section section-cream"><div className="container"><div className="section-head"><div><div className="section-kicker">{kicker}</div><h2 className="section-title dark">Latest releases</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="games-grid">{games.map((g) => <GameCard key={g.id} game={g} />)}</div></div></section>;
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
+  const updateNav = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    setCanPrev(el.scrollLeft > 16);
+    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+  useEffect(() => { updateNav(); window.addEventListener("resize", updateNav); return () => window.removeEventListener("resize", updateNav); }, []);
+  const scroll = (dir: number) => { const el = trackRef.current; if (!el) return; el.scrollBy({ left: dir * 320, behavior: "smooth" }); };
+  return (
+    <section className="section section-cream"><div className="container"><div className="section-head"><div><div className="section-kicker">{kicker}</div><h2 className="section-title dark">Latest releases</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="recent-carousel"><button type="button" className={`recent-arrow recent-arrow-prev${canPrev ? "" : " disabled"}`} aria-label="Previous" onClick={() => scroll(-1)}><Icon name="chevron-right" size={18} /></button><div className="recent-games-row" ref={trackRef} onScroll={updateNav}>{games.map((g) => <GameCard key={g.id} game={g} />)}</div><button type="button" className={`recent-arrow${canNext ? "" : " disabled"}`} aria-label="Next" onClick={() => scroll(1)}><Icon name="chevron-right" size={18} /></button></div></div></section>
+  );
 }
 
 function BottomCta() {
@@ -284,17 +297,17 @@ export function GamesPage() {
           <div className="games-top">
             <div>
               {!desktopFiltersOpen && (
-                <button type="button" className="filters-trigger" style={{ marginBottom: '24px' }} onClick={() => { setFiltersOpen(true); setDesktopFiltersOpen(true); }}>
+                <button type="button" className="filters-trigger filters-trigger-desktop" aria-expanded={desktopFiltersOpen} onClick={() => { setFiltersOpen(true); setDesktopFiltersOpen(true); }}>
                   <Icon name="menu" size={15} /> Show Filters{filterCount > 0 && <span className="filter-count-badge">{filterCount}</span>}
                 </button>
               )}
               <div className="games-title-block"><div className="section-kicker">The catalog</div><h1>Games</h1><p>Browse club projects, jams, and long-term games by semester, engine, and play type.</p></div>
             </div>
             <div className="games-top-right">
-              <button type="button" className="filters-trigger mobile-trigger" onClick={() => setFiltersOpen(true)}>
+              <button type="button" className="filters-trigger mobile-trigger" aria-expanded={filtersOpen} onClick={() => setFiltersOpen(true)}>
                 <Icon name="menu" size={15} /> Filters{filterCount > 0 && <span className="filter-count-badge">{filterCount}</span>}
               </button>
-              <div className="search-bar"><Icon name="search" size={20} /><input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Search title, genre, or vibe" aria-label="Search games" />{search && <button type="button" onClick={() => { setSearch(""); setPage(1); }} aria-label="Clear search"><Icon name="x" size={16} /></button>}</div>
+              <div className="search-bar"><Icon name="search" size={20} /><input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Search — use commas to combine" aria-label="Search games" />{search && <button type="button" onClick={() => { setSearch(""); setPage(1); }} aria-label="Clear search"><Icon name="x" size={16} /></button>}</div>
             </div>
           </div>
           <div className="results-meta">
@@ -433,7 +446,7 @@ export function GameDetailPage({ slug }: { slug: string }) {
 }
 
 function FilterGroup({ title, items, active, onToggle }: { title: string; items: { id: string; label: string; count: number; icon?: string | null }[]; active: Set<string>; onToggle: (id: string) => void }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   return <div className="filter-group"><button className={`filter-group-head ${open ? "open" : ""}`} onClick={() => setOpen(!open)}><span className="arrow"><Icon name="chevron-right" size={12} stroke={3} /></span>{title}</button>{open && <div className="filter-options">{items.filter((i) => i.count > 0).map((i) => <button key={i.id} className={`filter-option ${active.has(i.id) ? "active" : ""}`} onClick={() => onToggle(i.id)}>{i.icon && <span className="filter-icon"><Image src={i.icon} alt="" width={16} height={16} /></span>}<span className="label">{i.label}</span><span className="badge">{i.count}</span></button>)}</div>}</div>;
 }
 
