@@ -73,7 +73,14 @@ const HERO_SLIDES = [
   { caption: "Spring 2025 Decked Out Team", desc: "The team behind Decked Out, one of GBC's Spring 2025 projects.", image: asset("club-spring-2025-group.png") },
   { caption: "Original Founders of GBC", desc: "The students who founded GBC at UGA in 2021 and got the club off the ground.", image: asset("founders.jpg") },
 ];
-const OFFICERS = ["President", "Vice President", "Projects Officer", "Events Officer", "Art Director", "Treasurer"].map((role, i) => ({ initials: ["AB", "CD", "EF", "GH", "IJ", "KL"][i], name: "[Officer Name]", role }));
+const OFFICERS = [
+  { name: "Rawson", initials: "R", role: "President" },
+  { name: "Caleb", initials: "C", role: "Vice President" },
+  { name: "David", initials: "D", role: "Projects Officer" },
+  { name: "Cal", initials: "C", role: "Workshops Officer" },
+  { name: "TBD", initials: "?", role: "Finance Officer" },
+  { name: "Divesh", initials: "D", role: "Web Dev Officer" },
+];
 const MEETINGS = [{ day: "Wednesday", kind: "Workshop / Social / Project Work", time: "6:30 - 8:00 PM", location: "SLC 345" }];
 const STEPS = [{ num: "01", title: "Join the Discord", body: "The fastest way in. Project channels, voice rooms, jam announcements all live there." }, { num: "02", title: "Week 1 is intro night", body: "Come meet the club, learn how the semester works, and get familiar with the project process." }, { num: "03", title: "Week 2 is pitch night", body: "Project leads pitch their game ideas, then members pick preferences through a Google Form." }, { num: "04", title: "Week 3 is team announcements", body: "Teams are announced based on what people selected, then project work days begin." }];
 const FAQS = [
@@ -146,7 +153,7 @@ function EngineIcon({ engine, size = 24 }: { engine: string; size?: number }) {
 }
 
 function GameCard({ game }: { game: Game }) {
-  return <Link href={`/games/${game.slug}`} className="game-card"><GameArt game={game} /><div className="game-card-row"><div className="game-card-title">{game.title}</div><div className="game-card-meta"><EngineIcon engine={game.engine} size={22} /><span className="semester-badge">{game.semester}</span></div></div><p className="game-card-desc">{game.tagline}</p><div className="game-tags">{game.genres.slice(0, 5).map((t) => <span key={t} className="tag-chip">{t}</span>)}{game.genres.length > 5 && <span className="tag-chip" style={{ background: "transparent", color: "var(--c-ink-3)", border: "1px solid var(--c-line)" }}>+{game.genres.length - 5}</span>}</div></Link>;
+  return <Link href={`/games/${game.slug}`} className="game-card"><GameArt game={game} /><div className="game-card-row"><div className="game-card-title">{game.title}</div><span className={`semester-badge${game.semesters && game.semesters.length > 1 ? " semester-badge-range" : ""}`}>{game.semester}</span></div><p className="game-card-desc">{game.tagline}</p><div className="game-tags">{game.genres.slice(0, 5).map((t) => <span key={t} className="tag-chip">{t}</span>)}{game.genres.length > 5 && <span className="tag-chip tag-chip-overflow">+{game.genres.length - 5}</span>}<div className="game-card-engine"><EngineIcon engine={game.engine} size={18} /></div></div></Link>;
 }
 
 function PageShell({ children }: { children: ReactNode }) {
@@ -169,7 +176,8 @@ function Stats() {
 }
 
 function RecentGames({ games }: { games: Game[] }) {
-  return <section className="section"><div className="container"><div className="section-head"><div><div className="section-kicker">Fall 2023</div><h2 className="section-title dark">Recent ship list.</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="games-grid">{games.map((g) => <GameCard key={g.id} game={g} />)}</div></div></section>;
+  const kicker = games.length > 0 ? latestSemester(games[0]) : "";
+  return <section className="section"><div className="container"><div className="section-head"><div><div className="section-kicker">{kicker}</div><h2 className="section-title dark">Latest releases.</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="games-grid">{games.map((g) => <GameCard key={g.id} game={g} />)}</div></div></section>;
 }
 
 function BottomCta() {
@@ -402,15 +410,15 @@ function PhotoHero({ kicker, title, body }: { kicker: string; title: string; bod
 }
 
 function Values() {
-  return <section className="values-band"><div className="container"><div className="section-kicker">What we value</div><h2 className="section-title">Three things we care about, in order.</h2><div className="value-grid">{[["01", "Ship something", "Half-finished projects teach you more than perfect plans. We optimize for cutting scope and reaching the credits screen."], ["02", "Cross-discipline by default", "A programmer-only project is a tech demo. We pair coders with artists, writers and composers from day one."], ["03", "No gatekeeping", "Never made a game? Cool, neither had most of us. Mentorship and pair-building are built into every project."]].map(([n, t, b]) => <div className="value-card" key={n}><strong>{n}</strong><h3>{t}</h3><p>{b}</p></div>)}</div></div></section>;
+  return <section className="values-band"><div className="container"><div className="section-kicker">What we value</div><h2 className="section-title">What GBC is built on.</h2><div className="value-grid">{[["01", "Ship something", "We focus on finishing. Smaller scope, real game, something you can actually show people."], ["02", "Cross-discipline", "Games need more than code. We connect programmers, artists, writers, and composers from the start."], ["03", "Open to everyone", "Never made a game before? That’s fine. Everyone starts somewhere, and we make sure you’re not starting alone."]].map(([n, t, b]) => <div className="value-card" key={n}><strong>{n}</strong><h3>{t}</h3><p>{b}</p></div>)}</div></div></section>;
 }
 
 function Officers() {
-  return <section className="section"><div className="container"><div className="section-kicker">The 2025-26 Board</div><h2 className="section-title">Officers who keep the wheels turning.</h2><div className="officer-grid">{OFFICERS.map((o, i) => <div className="officer-card" key={o.role}><div>{o.initials}</div><section><h5>{o.name}</h5><p>{o.role}</p></section></div>)}</div></div></section>;
+  return <section className="section"><div className="container"><div className="section-kicker">The 2026-27 Board</div><h2 className="section-title">The 2026-27 board.</h2><div className="officer-grid">{OFFICERS.map((o) => <div className="officer-card" key={o.role}><div>{o.initials}</div><section><h5>{o.name}</h5><p>{o.role}</p></section></div>)}</div></div></section>;
 }
 
 export function HowPage() {
-  return <PageShell><main className="page-enter"><PhotoHero kicker="How it Works" title={'From "curious" to "in the credits."'} body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><div className="section-kicker">The on-ramp</div><h2 className="section-title dark">Four steps. Zero commitment.</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a><Link href="/contact" className="btn btn-lg btn-ghost">Or email us <Icon name="mail" size={18} /></Link></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
+  return <PageShell><main className="page-enter"><PhotoHero kicker="How it Works" title="How GBC works." body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><div className="section-kicker">Getting started</div><h2 className="section-title dark">How to get involved.</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a><Link href="/contact" className="btn btn-lg btn-ghost">Or email us <Icon name="mail" size={18} /></Link></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
 }
 
 function Meetings() {
@@ -418,7 +426,7 @@ function Meetings() {
 }
 
 function WhatWeDo() {
-  return <section className="section"><div className="container"><div className="section-kicker">What we do</div><h2 className="section-title dark">Three things on rotation, all semester.</h2><div className="value-grid">{[["controller", "Long-Term Projects", "Teams of 4-8 build larger games across a semester or longer timeline. We pair leads with newcomers."], ["sparkle", "Game Jams", "A weekend of caffeine, pixel art and last-minute scope cuts. We run 3 per year."], ["code", "Workshops", "Bring-a-laptop sessions: shaders, level design, music for games, marketing on itch."]].map(([i, t, b]) => <div className="simple-card" key={t}><div><Icon name={i as IconName} size={22} /></div><h3>{t}</h3><p>{b}</p></div>)}</div></div></section>;
+  return <section className="section"><div className="container"><div className="section-kicker">What we do</div><h2 className="section-title dark">What we do each semester.</h2><div className="value-grid">{[["controller", "Long-Term Projects", "Teams of 4-8 build larger games across a semester or longer timeline. We pair leads with newcomers."], ["sparkle", "Game Jams", "A weekend of caffeine, pixel art and last-minute scope cuts. We run 3 per year."], ["code", "Workshops", "Bring-a-laptop sessions: shaders, level design, music for games, marketing on itch."]].map(([i, t, b]) => <div className="simple-card" key={t}><div><Icon name={i as IconName} size={22} /></div><h3>{t}</h3><p>{b}</p></div>)}</div></div></section>;
 }
 
 export function FaqPage() {

@@ -491,18 +491,18 @@ p { margin: 0; }
   font-size: 18px;
   letter-spacing: 0.03em;
   border: 2px solid var(--c-red);
-  transition: background 160ms ease, box-shadow 160ms ease;
+  transition: box-shadow 160ms ease, filter 160ms ease;
   cursor: pointer;
 }
-.btn:hover { background: var(--c-red-deep); border-color: var(--c-red-deep); box-shadow: var(--shadow-card); }
+.btn:hover { box-shadow: var(--shadow-card); filter: brightness(1.08); }
 .btn-ghost {
   background: transparent;
   color: var(--c-ink);
   border-color: var(--c-ink);
 }
-.btn-ghost:hover { background: var(--c-ink); color: #fff; border-color: var(--c-ink); }
+.btn-ghost:hover { box-shadow: var(--shadow-card); filter: none; background: transparent; }
 .btn-discord { background: var(--c-discord); border-color: var(--c-discord); }
-.btn-discord:hover { background: #4752c4; border-color: #4752c4; }
+.btn-discord:hover { filter: brightness(1.1); }
 .btn-lg { padding: 18px 36px; font-size: 20px; }
 
 /* ====== Games page ====== */
@@ -657,13 +657,25 @@ p { margin: 0; }
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(279px, 1fr));
   gap: 32px 18px;
+  padding: 8px 4px;
 }
 .game-card {
   position: relative;
   cursor: pointer;
-  display: block;
+  display: flex;
+  flex-direction: column;
   color: inherit;
+  background: #fff;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--c-line);
+  transition: box-shadow 200ms ease;
+  height: 100%;
+  overflow: hidden;
 }
+.game-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+.game-card-no-image .game-card-row { margin-top: 16px; }
 .game-card-entry {
   opacity: 1;
 }
@@ -687,9 +699,10 @@ p { margin: 0; }
   width: 100%;
   aspect-ratio: 279 / 201;
   background: #D9D9D9;
-  border-radius: var(--r-md);
+  border-radius: 0;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .game-card-row {
   display: flex;
@@ -697,6 +710,7 @@ p { margin: 0; }
   align-items: center;
   margin-top: 10px;
   gap: 8px;
+  padding: 0 12px;
 }
 .game-card-title {
   font-family: var(--f-body);
@@ -722,6 +736,7 @@ p { margin: 0; }
   color: var(--c-ink);
 }
 .engine-logo svg, .engine-logo img { width: 100%; height: 100%; object-fit: contain; }
+.semester-badge-range { font-size: 9px !important; }
 .semester-badge {
   background: var(--c-red);
   color: #fff;
@@ -736,19 +751,24 @@ p { margin: 0; }
   font-family: var(--f-body);
   font-size: 11px;
   color: var(--c-ink-3);
+  padding: 0 12px;
   margin-top: 8px;
   line-height: 1.4;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 .game-tags {
-  margin-top: 8px;
+  margin-top: auto;
+  padding: 8px 12px 12px;
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+  align-items: center;
 }
+.game-card-engine { margin-left: auto; }
 .tag-chip {
   background: var(--c-tag);
   color: var(--c-tag-text);
@@ -760,6 +780,7 @@ p { margin: 0; }
   white-space: nowrap;
   letter-spacing: 0.04em;
 }
+.tag-chip-overflow { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-line); }
 
 .results-meta {
   display: flex;
@@ -1063,7 +1084,9 @@ p { margin: 0; }
   padding: 28px 24px;
   box-shadow: var(--shadow-card);
   border-top: 4px solid var(--c-red);
+  transition: box-shadow 200ms ease;
 }
+.step-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
 .step-card .num {
   font-family: var(--f-display);
   font-weight: 500;
@@ -1406,7 +1429,7 @@ p { margin: 0; }
   cursor: pointer;
   transition: background 160ms ease, box-shadow 160ms ease;
 }
-.play-in-browser-btn:hover { background: var(--c-red-deep); box-shadow: var(--shadow-card); }
+.play-in-browser-btn:hover { box-shadow: var(--shadow-card); filter: brightness(1.08); }
 .game-embed-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
 .game-detail-info {
   display: grid;
@@ -1636,7 +1659,7 @@ p { margin: 0; }
 /* ====== Placeholder art (for games without real art) ====== */
 .placeholder-art {
   width: 100%;
-  height: 100%;
+  height: auto;
   position: relative;
   display: flex;
   align-items: center;
@@ -1665,6 +1688,7 @@ p { margin: 0; }
   background: rgba(255,255,255,0.12);
   border-color: #fff;
   color: #fff;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 .about-panel-button {
@@ -1889,7 +1913,10 @@ p { margin: 0; }
   border-radius: var(--r-lg);
   padding: 32px;
   border: 1px solid var(--c-line);
+  transition: box-shadow 200ms ease;
 }
+.value-card:hover,
+.simple-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
 .value-card {
   border-top: 4px solid var(--c-red);
   box-shadow: var(--shadow-card);
