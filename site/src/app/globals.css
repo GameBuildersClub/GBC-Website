@@ -970,7 +970,37 @@ p { margin: 0; }
   gap: 5px;
   align-items: center;
 }
-.game-card-engine { margin-left: auto; }
+.game-card-platforms { 
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.store-icon {
+  display: grid;
+  place-items: center;
+  color: var(--c-ink-3);
+  transition: color 150ms ease;
+}
+.game-card:hover .store-icon { color: var(--c-ink-2); }
+.game-card-kind-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #fff;
+  font-family: var(--f-body);
+  font-weight: 700;
+  font-size: 9px;
+  text-transform: uppercase;
+  padding: 4px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  backdrop-filter: blur(4px);
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.game-card-kind-badge.jam { background: rgba(0, 0, 0, 0.65); }
+.game-card-kind-badge.semester { background: rgba(189, 38, 38, 0.85); }
 .engine-logo {
   display: grid;
   place-items: center;
@@ -1555,39 +1585,40 @@ p { margin: 0; }
 }
 .game-store-actions {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 18px;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
 }
-.store-badge-itch {
-  display: inline-block;
-  line-height: 0;
-  align-self: flex-start;
-}
-.store-badge-itch img {
-  display: block;
-  width: auto !important;
-  height: 54px !important;
-  border-radius: 4px;
-  transition: opacity 160ms ease;
-}
-.store-badge-itch:hover img { opacity: 0.88; }
-
-.store-badge-steam {
+.store-badge {
+  width: 100%;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: #1b2838;
-  color: #c7d5e0;
-  border-radius: 4px;
-  padding: 0 16px 0 12px;
+  justify-content: center;
+  gap: 12px;
+  border-radius: var(--r-md);
+  padding: 0 16px;
   height: 54px;
   text-decoration: none;
-  transition: background 160ms ease;
+  transition: box-shadow 160ms ease, filter 160ms ease;
+  border: 2px solid transparent;
 }
-.store-badge-steam:hover { background: #2a475e; }
-.store-badge-steam svg { color: #c7d5e0; flex-shrink: 0; }
-.store-badge-steam span {
+.store-badge:hover {
+  box-shadow: var(--shadow-card);
+  filter: brightness(1.08);
+}
+.store-badge-itch {
+  background: #fa5c5c;
+  color: #fff;
+  border-color: #e54646;
+}
+.store-badge-steam {
+  background: #1b2838;
+  color: #fff;
+  border-color: #131c27;
+}
+.store-badge svg { flex-shrink: 0; width: 24px; height: 24px; }
+.store-badge-steam svg { color: #c7d5e0; }
+.store-badge span {
   display: flex;
   flex-direction: column;
   line-height: 1.1;
@@ -1597,13 +1628,13 @@ p { margin: 0; }
   letter-spacing: 0.02em;
   color: #fff;
 }
-.store-badge-steam small {
+.store-badge small {
   font-family: var(--f-body);
   font-size: 10px;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #c7d5e0;
+  opacity: 0.8;
 }
 
 .game-embed-placeholder {

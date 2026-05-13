@@ -107,7 +107,10 @@ function Icon({ name, size = 18, stroke = 2 }: { name: IconName; size?: number; 
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: stroke, strokeLinecap: "round", strokeLinejoin: "round" } as const;
   if (name === "discord") return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.029zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>;
   if (name === "twitter") return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>;
-  if (["github", "itch", "steam", "unreal"].includes(name)) return <span className="icon-text-fallback" style={{ fontSize: size * 0.6 }}>{name === "github" ? "GH" : name === "itch" ? "io" : name === "steam" ? "ST" : "UE"}</span>;
+  if (name === "github") return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg>;
+  if (name === "steam") return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z" /></svg>;
+  if (name === "itch") return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M3.13 1.338C2.08 1.96.02 4.328 0 4.95v1.03c0 1.303 1.22 2.45 2.325 2.45 1.33 0 2.436-1.102 2.436-2.41 0 1.308 1.07 2.41 2.4 2.41 1.328 0 2.362-1.102 2.362-2.41 0 1.308 1.137 2.41 2.466 2.41h.024c1.33 0 2.466-1.102 2.466-2.41 0 1.308 1.034 2.41 2.363 2.41 1.33 0 2.4-1.102 2.4-2.41 0 1.308 1.106 2.41 2.435 2.41C22.78 8.43 24 7.282 24 5.98V4.95c-.02-.62-2.082-2.99-3.13-3.612-3.253-.114-5.508-.134-8.87-.133-3.362 0-7.945.053-8.87.133zm6.376 6.477a2.74 2.74 0 0 1-.468.602c-.5.49-1.19.795-1.947.795a2.786 2.786 0 0 1-1.95-.795c-.182-.178-.32-.37-.446-.59-.127.222-.303.412-.486.59a2.788 2.788 0 0 1-1.95.795c-.092 0-.187-.025-.264-.052-.107 1.113-.152 2.176-.168 2.95v.005l-.006 1.167c.02 2.334-.23 7.564 1.03 8.85 1.952.454 5.545.662 9.15.663 3.605 0 7.198-.21 9.15-.664 1.26-1.284 1.01-6.514 1.03-8.848l-.006-1.167v-.004c-.016-.775-.06-1.838-.168-2.95-.077.026-.172.052-.263.052a2.788 2.788 0 0 1-1.95-.795c-.184-.178-.36-.368-.486-.59-.127.22-.265.412-.447.59a2.786 2.786 0 0 1-1.95.794c-.76 0-1.446-.303-1.948-.793a2.74 2.74 0 0 1-.468-.602 2.738 2.738 0 0 1-.463.602 2.787 2.787 0 0 1-1.95.794h-.16a2.787 2.787 0 0 1-1.95-.793 2.738 2.738 0 0 1-.464-.602zm-2.004 2.59v.002c.795.002 1.5 0 2.373.953.687-.072 1.406-.108 2.125-.107.72 0 1.438.035 2.125.107.873-.953 1.578-.95 2.372-.953.376 0 1.876 0 2.92 2.934l1.123 4.028c.832 2.995-.266 3.068-1.636 3.07-2.03-.075-3.156-1.55-3.156-3.025-1.124.184-2.436.276-3.748.277-1.312 0-2.624-.093-3.748-.277 0 1.475-1.125 2.95-3.156 3.026-1.37-.004-2.468-.077-1.636-3.072l1.122-4.027c1.045-2.934 2.545-2.934 2.92-2.934zM12 12.714c-.002.002-2.14 1.964-2.523 2.662l1.4-.056v1.22c0 .056.56.033 1.123.007.562.026 1.124.05 1.124-.008v-1.22l1.4.055C14.138 14.677 12 12.713 12 12.713z" /></svg>;
+  if (name === "unreal") return <span className="icon-text-fallback" style={{ fontSize: size * 0.6 }}>UE</span>;
   const paths: Partial<Record<IconName, ReactNode>> = {
     "arrow-right": <><path d="M5 12h14" /><path d="M13 5l7 7-7 7" /></>,
     "arrow-up-right": <><path d="M7 17 17 7" /><path d="M8 7h9v9" /></>,
@@ -146,8 +149,14 @@ function FooterLinks({ title, links }: { title: string; links: string[][] }) {
 }
 
 function GameArt({ game }: { game: Game }) {
-  if (game.image) return <div className="game-card-image"><Image src={game.image} alt={game.title} fill sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" style={{ objectFit: "cover" }} /></div>;
-  return <div className="game-card-image placeholder-art"><span className="label">{game.title}</span></div>;
+  const isJam = game.kind === "jam";
+  const typeLabel = isJam ? "Game Jam" : "Long-term";
+  return (
+    <div className="game-card-image">
+      {game.image ? <Image src={game.image} alt={game.title} fill sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" style={{ objectFit: "cover" }} /> : <div className="placeholder-art"><span className="label">{game.title}</span></div>}
+      <div className={`game-card-kind-badge ${game.kind}`}>{typeLabel}</div>
+    </div>
+  );
 }
 
 function EngineIcon({ engine, size = 24 }: { engine: string; size?: number }) {
@@ -158,7 +167,28 @@ function EngineIcon({ engine, size = 24 }: { engine: string; size?: number }) {
 }
 
 function GameCard({ game }: { game: Game }) {
-  return <Link href={`/games/${game.slug}`} className="game-card"><GameArt game={game} /><div className="game-card-row"><div className="game-card-title">{game.title}</div><span className={`semester-badge${game.semesters && game.semesters.length > 1 ? " semester-badge-range" : ""}`}>{game.semester}</span></div><p className="game-card-desc">{game.tagline}</p><div className="game-tags">{game.genres.slice(0, 5).map((t) => <span key={t} className="tag-chip">{t}</span>)}{game.genres.length > 5 && <span className="tag-chip tag-chip-overflow">+{game.genres.length - 5}</span>}<div className="game-card-engine"><EngineIcon engine={game.engine} size={18} /></div></div></Link>;
+  const stores = [];
+  if (game.steamUrl) stores.push("steam");
+  if (game.itchUrl) stores.push("itch");
+
+  return (
+    <Link href={`/games/${game.slug}`} className="game-card">
+      <GameArt game={game} />
+      <div className="game-card-row">
+        <div className="game-card-title">{game.title}</div>
+        <span className={`semester-badge${game.semesters && game.semesters.length > 1 ? " semester-badge-range" : ""}`}>{game.semester}</span>
+      </div>
+      <p className="game-card-desc">{game.tagline}</p>
+      <div className="game-tags">
+        {game.genres.slice(0, 5).map((t) => <span key={t} className="tag-chip">{t}</span>)}
+        {game.genres.length > 5 && <span className="tag-chip tag-chip-overflow">+{game.genres.length - 5}</span>}
+        <div className="game-card-platforms">
+          {stores.map(s => <div key={s} className="store-icon" title={`Available on ${s}`}><Icon name={s as IconName} size={20} /></div>)}
+          <EngineIcon engine={game.engine} size={22} />
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 function PageShell({ children }: { children: ReactNode }) {
@@ -440,8 +470,8 @@ export function GameDetailPage({ slug }: { slug: string }) {
                 {game.image && <div className="game-detail-poster"><Image src={game.image} alt={game.title} fill sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: "cover" }} /></div>}
                 <p>{game.tagline}</p>
                 <div className="game-store-actions">
-                  {game.itchUrl && <a className="store-badge-itch" href={game.itchUrl} target="_blank" rel="noreferrer" title="Available on itch.io"><Image src="https://static.itch.io/images/badge-color.svg" alt="Available on itch.io" width={146} height={54} /></a>}
-                  {game.steamUrl && <a className="store-badge-steam" href={game.steamUrl} target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.252 0-2.265-1.014-2.265-2.265z" /></svg><span><small>Available on</small>Steam</span></a>}
+                  {game.steamUrl && <a className="store-badge store-badge-steam" href={game.steamUrl} target="_blank" rel="noreferrer"><Icon name="steam" size={24} /><span><small>Available on</small>Steam</span></a>}
+                  {game.itchUrl && <a className="store-badge store-badge-itch" href={game.itchUrl} target="_blank" rel="noreferrer" title="Available on itch.io"><Icon name="itch" size={24} /><span><small>Available on</small>itch.io</span></a>}
                 </div>
               </aside>
             </div>
