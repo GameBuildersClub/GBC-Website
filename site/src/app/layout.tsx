@@ -4,6 +4,7 @@ import { outfit } from "./fonts/outfit";
 import { poppins } from "./fonts/poppins";
 import { orienta } from "./fonts/orienta";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const BASE_URL = "https://ugagbc.com";
 const DESC = "The University of Georgia's student-run game development club. We build games, run jams, and teach each other everything from code to art to music.";
@@ -36,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${outfit.className} ${poppins.className} ${orienta.variable}`}>{children}<Analytics /></body>
+      <body className={`${outfit.className} ${poppins.className} ${orienta.variable}`}>{children}<Analytics /><SpeedInsights /></body>
     </html>
   );
 }
