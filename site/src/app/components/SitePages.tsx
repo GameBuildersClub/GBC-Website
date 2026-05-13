@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import projectsData from "../data/projects";
 
 type IconName = "arrow-right" | "arrow-up-right" | "chevron-right" | "search" | "discord" | "instagram" | "youtube" | "twitter" | "github" | "itch" | "steam" | "mail" | "pin" | "clock" | "controller" | "sparkle" | "users" | "code" | "x" | "unreal" | "custom" | "menu" | "expand";
@@ -237,7 +237,6 @@ export function GamesPage() {
   const [stores, setStores] = useState(new Set<string>());
   const [sort, setSort] = useState<SortOrder>("recent");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
   const toggle = (set: Set<string>, setter: (s: Set<string>) => void, val: string) => { const next = new Set(set); if (next.has(val)) { next.delete(val); } else { next.add(val); } setter(next); };
   const matchesSearch = (g: Game, term: string) => {
     if (!term) return true;
@@ -259,7 +258,15 @@ export function GamesPage() {
     if (sort === "za") return [...base].sort((a, b) => b.title.localeCompare(a.title));
     return base;
   }, [search, engines, semesters, kinds, playTypes, stores, sort]);
-  const [visible, setVisible] = useState(12);
+  const [visible, setVisible] = useState(24);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const snapVisible = useCallback((base: number) => {
+    setVisible(() => {
+      if (!gridRef.current) return base;
+      const cols = window.getComputedStyle(gridRef.current).gridTemplateColumns.split(" ").length;
+      return Math.ceil(base / cols) * cols;
+    });
+  }, []);
   const shown = filtered.slice(0, visible);
   const hasMore = visible < filtered.length;
   const filterCount = engines.size + semesters.size + kinds.size + playTypes.size + stores.size + (search ? 1 : 0);
@@ -269,16 +276,28 @@ export function GamesPage() {
   const withoutPlayType = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, semesters, kinds, stores, search]);
   const withoutStore = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && matchesSearch(g, search)), [engines, semesters, kinds, playTypes, search]);
   const hasFilters = filterCount > 0;
-  const reset = () => { setSearch(""); setEngines(new Set()); setSemesters(new Set()); setKinds(new Set()); setPlayTypes(new Set()); setStores(new Set()); setVisible(12); };
-  useEffect(() => { setVisible(12); }, [search, engines, semesters, kinds, playTypes, stores, sort]);
+  const reset = () => { setSearch(""); setEngines(new Set()); setSemesters(new Set()); setKinds(new Set()); setPlayTypes(new Set()); setStores(new Set()); snapVisible(24); };
+  useEffect(() => { snapVisible(24); }, [search, engines, semesters, kinds, playTypes, stores, sort, snapVisible]);
+  useEffect(() => {
+    const handleResize = () => {
+      setVisible((v) => {
+        if (!gridRef.current) return v;
+        const cols = window.getComputedStyle(gridRef.current).gridTemplateColumns.split(" ").length;
+        if (v % cols === 0) return v;
+        return Math.ceil(v / cols) * cols;
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <PageShell>
-      <main className={`page-enter games-layout${!desktopFiltersOpen ? " desktop-filters-closed" : ""}`}>
+      <main className="page-enter games-layout">
         {filtersOpen && <div className="sidebar-overlay" onClick={() => setFiltersOpen(false)} />}
         <aside className={`games-sidebar${filtersOpen ? " sidebar-open" : ""}`}>
           <div className="sidebar-head">
             <h3>FILTERS</h3>
-            <button type="button" className="sidebar-close" aria-label="Close filters" onClick={() => { setFiltersOpen(false); setDesktopFiltersOpen(false); }}><Icon name="x" size={18} /></button>
+            <button type="button" className="sidebar-close" aria-label="Close filters" onClick={() => setFiltersOpen(false)}><Icon name="x" size={18} /></button>
           </div>
           <div className="sidebar-body">
             <FilterGroup title="Game Engine" items={ENGINES.map((e) => ({ id: e.id, label: e.label, count: withoutEngine.filter((g) => g.engine === e.id).length, icon: e.icon }))} active={engines} onToggle={(v) => toggle(engines, setEngines, v)} />
@@ -296,11 +315,6 @@ export function GamesPage() {
         <section className="games-main">
           <div className="games-top">
             <div>
-              {!desktopFiltersOpen && (
-                <button type="button" className="filters-trigger filters-trigger-desktop" aria-expanded={desktopFiltersOpen} onClick={() => { setFiltersOpen(true); setDesktopFiltersOpen(true); }}>
-                  <Icon name="menu" size={15} /> Show Filters{filterCount > 0 && <span className="filter-count-badge">{filterCount}</span>}
-                </button>
-              )}
               <div className="games-title-block"><div className="section-kicker">The catalog</div><h1>Games</h1><p>Browse club projects, jams, and long-term games by semester, engine, and play type.</p></div>
             </div>
             <div className="games-top-right">
@@ -317,8 +331,8 @@ export function GamesPage() {
             </div>
           </div>
           {filtered.length ? <>
-            <div className="games-grid games-grid-animated">{shown.map((g, i) => <div key={g.id} className={`game-card-entry delay-${Math.min(Math.floor(i / 2), 8)}`}><GameCard game={g} /></div>)}</div>
-            {hasMore && <div className="load-more-wrap"><button type="button" className="btn btn-ghost load-more-btn" onClick={() => setVisible((v) => v + 12)}>Load more games <Icon name="chevron-right" size={14} /></button></div>}
+            <div ref={gridRef} className="games-grid games-grid-animated">{shown.map((g, i) => <div key={g.id} className={`game-card-entry delay-${Math.min(Math.floor(i / 2), 8)}`}><GameCard game={g} /></div>)}</div>
+            {hasMore && <div className="load-more-wrap"><button type="button" className="btn btn-ghost load-more-btn" onClick={() => snapVisible(visible + 24)}>Load more games <Icon name="chevron-right" size={14} /></button></div>}
           </> : <div className="empty-state"><div><Icon name="controller" size={28} /></div><h3>No games match those filters.</h3><p>Try clearing them, or check back next semester.</p><button type="button" onClick={reset} className="btn">Reset filters</button></div>}
         </section>
       </main>
@@ -376,7 +390,8 @@ export function GameDetailPage({ slug }: { slug: string }) {
   const game = GAMES.find((g) => g.slug === slug);
   const [active, setActive] = useState(0);
   if (!game) return <PageShell><main className="page-enter"><section className="section"><div className="container empty-state"><div><Icon name="controller" size={28} /></div><h3>Game not found.</h3><p>That project is not in the catalog.</p><Link href="/games" className="btn">Back to games</Link></div></section></main></PageShell>;
-  const gallery = game.gallery?.length ? game.gallery : game.image ? [game.image] : [];
+  let gallery = game.gallery?.length ? game.gallery.filter((img) => img !== game.image) : [];
+  if (gallery.length === 0 && game.image) gallery = [game.image];
   const hasVideo = !!game.steamVideoUrl;
   const totalSlides = (hasVideo ? 1 : 0) + gallery.length;
   const isVideoActive = hasVideo && active === 0;
@@ -445,7 +460,7 @@ export function GameDetailPage({ slug }: { slug: string }) {
 
 function FilterGroup({ title, items, active, onToggle }: { title: string; items: { id: string; label: string; count: number; icon?: string | null }[]; active: Set<string>; onToggle: (id: string) => void }) {
   const [open, setOpen] = useState(false);
-  return <div className="filter-group"><button className={`filter-group-head ${open ? "open" : ""}`} onClick={() => setOpen(!open)}><span className="arrow"><Icon name="chevron-right" size={12} stroke={3} /></span>{title}</button>{open && <div className="filter-options">{items.filter((i) => i.count > 0).map((i) => <button key={i.id} className={`filter-option ${active.has(i.id) ? "active" : ""}`} onClick={() => onToggle(i.id)}>{i.icon && <span className="filter-icon"><Image src={i.icon} alt="" width={16} height={16} /></span>}<span className="label">{i.label}</span><span className="badge">{i.count}</span></button>)}</div>}</div>;
+  return <div className="filter-group"><button className={`filter-group-head ${open ? "open" : ""}`} onClick={() => setOpen(!open)}><span className="arrow"><Icon name="chevron-right" size={12} stroke={3} /></span>{title}</button>{open && <div className="filter-options">{items.filter((i) => i.count > 0).map((i) => <button type="button" key={i.id} className={`filter-option ${active.has(i.id) ? "active" : ""}`} onClick={() => onToggle(i.id)}>{i.icon && <span className="filter-icon"><Image src={i.icon} alt="" width={16} height={16} /></span>}<span className="label">{i.label}</span><span className="badge">{i.count}</span></button>)}</div>}</div>;
 }
 
 export function AboutPage() {
