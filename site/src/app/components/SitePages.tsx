@@ -171,7 +171,7 @@ export function HomePage() {
   useEffect(() => {
     if (paused) return;
     if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 6000);
+    const t = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 4000);
     return () => clearInterval(t);
   }, [paused]);
   const recent = SORTED_GAMES.slice(0, 4);
