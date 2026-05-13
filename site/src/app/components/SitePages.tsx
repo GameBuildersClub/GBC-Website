@@ -51,7 +51,7 @@ const ENGINES = [
   { id: "custom", label: "Other", icon: null },
 ];
 const SEMESTERS = ["Spring 2026", "Fall 2025", "Spring 2025", "Fall 2024", "Spring 2024", "Fall 2023", "Spring 2023"];
-const PAGE_SIZES = [12, 24, 48];
+
 const KINDS = [{ id: "semester", label: "Long-Term Project" }, { id: "jam", label: "Game Jam" }];
 const PLAY_TYPES = [{ id: "web", label: "Play in Browser" }, { id: "downloadable", label: "Downloadable" }];
 const STORES = [{ id: "itch", label: "itch.io" }, { id: "steam", label: "Steam" }];
@@ -236,11 +236,9 @@ export function GamesPage() {
   const [playTypes, setPlayTypes] = useState(new Set<string>());
   const [stores, setStores] = useState(new Set<string>());
   const [sort, setSort] = useState<SortOrder>("recent");
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
-  const toggle = (set: Set<string>, setter: (s: Set<string>) => void, val: string) => { const next = new Set(set); if (next.has(val)) { next.delete(val); } else { next.add(val); } setter(next); setPage(1); };
+  const toggle = (set: Set<string>, setter: (s: Set<string>) => void, val: string) => { const next = new Set(set); if (next.has(val)) { next.delete(val); } else { next.add(val); } setter(next); };
   const matchesSearch = (g: Game, term: string) => {
     if (!term) return true;
     const haystack = `${g.title} ${g.tagline} ${g.genres.join(" ")}`.toLowerCase();
@@ -261,8 +259,9 @@ export function GamesPage() {
     if (sort === "za") return [...base].sort((a, b) => b.title.localeCompare(a.title));
     return base;
   }, [search, engines, semesters, kinds, playTypes, stores, sort]);
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const [visible, setVisible] = useState(12);
+  const shown = filtered.slice(0, visible);
+  const hasMore = visible < filtered.length;
   const filterCount = engines.size + semesters.size + kinds.size + playTypes.size + stores.size + (search ? 1 : 0);
   const withoutEngine = useMemo(() => SORTED_GAMES.filter((g) => (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [semesters, kinds, playTypes, stores, search]);
   const withoutSemester = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, kinds, playTypes, stores, search]);
@@ -270,7 +269,8 @@ export function GamesPage() {
   const withoutPlayType = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, semesters, kinds, stores, search]);
   const withoutStore = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && matchesSearch(g, search)), [engines, semesters, kinds, playTypes, search]);
   const hasFilters = filterCount > 0;
-  const reset = () => { setSearch(""); setEngines(new Set()); setSemesters(new Set()); setKinds(new Set()); setPlayTypes(new Set()); setStores(new Set()); setPage(1); };
+  const reset = () => { setSearch(""); setEngines(new Set()); setSemesters(new Set()); setKinds(new Set()); setPlayTypes(new Set()); setStores(new Set()); setVisible(12); };
+  useEffect(() => { setVisible(12); }, [search, engines, semesters, kinds, playTypes, stores, sort]);
   return (
     <PageShell>
       <main className={`page-enter games-layout${!desktopFiltersOpen ? " desktop-filters-closed" : ""}`}>
@@ -307,20 +307,18 @@ export function GamesPage() {
               <button type="button" className="filters-trigger mobile-trigger" aria-expanded={filtersOpen} onClick={() => setFiltersOpen(true)}>
                 <Icon name="menu" size={15} /> Filters{filterCount > 0 && <span className="filter-count-badge">{filterCount}</span>}
               </button>
-              <div className="search-bar"><Icon name="search" size={20} /><input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Search — use commas to combine" aria-label="Search games" />{search && <button type="button" onClick={() => { setSearch(""); setPage(1); }} aria-label="Clear search"><Icon name="x" size={16} /></button>}</div>
+              <div className="search-bar"><Icon name="search" size={20} /><input value={search} onChange={(e) => { setSearch(e.target.value); }} placeholder="Search — use commas to combine" aria-label="Search games" />{search && <button type="button" onClick={() => { setSearch(""); }} aria-label="Clear search"><Icon name="x" size={16} /></button>}</div>
             </div>
           </div>
           <div className="results-meta">
-            <span>{filtered.length === 0 ? "No games found" : `Showing ${Math.min((page - 1) * pageSize + 1, filtered.length)}–${Math.min(page * pageSize, filtered.length)} of ${filtered.length}`}</span>
+            <span>{filtered.length === 0 ? "No games found" : `Showing ${shown.length} of ${filtered.length}`}</span>
             <div className="results-meta-right">
-              <span>Sort</span>{SORT_OPTIONS.map((o) => <button type="button" key={o.id} className={`page-size-btn ${sort === o.id ? "active" : ""}`} onClick={() => { setSort(o.id); setPage(1); }}>{o.label}</button>)}
-              <span className="results-divider" />
-              <span>Per page</span>{PAGE_SIZES.map((n) => <button type="button" key={n} className={`page-size-btn ${pageSize === n ? "active" : ""}`} onClick={() => { setPageSize(n); setPage(1); }}>{n}</button>)}
+              <span>Sort</span>{SORT_OPTIONS.map((o) => <button type="button" key={o.id} className={`page-size-btn ${sort === o.id ? "active" : ""}`} onClick={() => { setSort(o.id); }}>{o.label}</button>)}
             </div>
           </div>
           {filtered.length ? <>
-            <div className="games-grid games-grid-animated">{paginated.map((g, i) => <div key={g.id} className={`game-card-entry delay-${Math.min(Math.floor(i / 2), 8)}`}><GameCard game={g} /></div>)}</div>
-            {totalPages > 1 && <div className="pagination"><button type="button" className="pagination-btn" aria-label="Previous page" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}><Icon name="chevron-right" size={16} /></button>{Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => <button type="button" key={n} aria-label={`Page ${n}`} className={`pagination-btn ${n === page ? "active" : ""}`} onClick={() => setPage(n)}>{n}</button>)}<button type="button" className="pagination-btn" aria-label="Next page" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}><Icon name="chevron-right" size={16} /></button></div>}
+            <div className="games-grid games-grid-animated">{shown.map((g, i) => <div key={g.id} className={`game-card-entry delay-${Math.min(Math.floor(i / 2), 8)}`}><GameCard game={g} /></div>)}</div>
+            {hasMore && <div className="load-more-wrap"><button type="button" className="btn btn-ghost load-more-btn" onClick={() => setVisible((v) => v + 12)}>Load more games <Icon name="chevron-right" size={14} /></button></div>}
           </> : <div className="empty-state"><div><Icon name="controller" size={28} /></div><h3>No games match those filters.</h3><p>Try clearing them, or check back next semester.</p><button type="button" onClick={reset} className="btn">Reset filters</button></div>}
         </section>
       </main>
