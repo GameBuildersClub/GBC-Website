@@ -928,14 +928,16 @@ p { margin: 0; }
 .faq-hero-bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+}
+.faq-hero-bg {
+  opacity: 0.42;
 }
 .faq-hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,0.45);
 }
 .faq-hero-inner {
   position: relative;
@@ -1851,8 +1853,7 @@ p { margin: 0; }
 .photo-hero-bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   opacity: 0.42;
 }
 .photo-hero::after {
@@ -1895,6 +1896,8 @@ p { margin: 0; }
 }
 .story-photo {
   height: 500px;
+  position: relative;
+  overflow: hidden;
 }
 .values-band,
 .meetings-band {
