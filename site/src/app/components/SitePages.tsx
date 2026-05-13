@@ -68,7 +68,7 @@ const gameStores = (g: Game): string[] => {
   return s;
 };
 const HERO_SLIDES = [
-  { caption: "Spring 2024 Engagement Fair", desc: "GBC at the University of Georgia's Spring 2024 Engagement Fair.", image: asset("club-spring-2024-fair.png") },
+  { caption: "Fall 2025 Showcase", desc: "Members demoing their semester projects at the Fall 2025 GBC showcase.", image: asset("club-fall-2025-showcase.jpg") },
   { caption: "Fall 2023 Showcase", desc: "Members presenting long-term projects at the Fall 2023 showcase.", image: asset("club-fall-2023-showcase.png") },
   { caption: "Spring 2025 Decked Out Team", desc: "The team behind Decked Out, one of GBC's Spring 2025 projects.", image: asset("club-spring-2025-group.png") },
   { caption: "Original Founders of GBC", desc: "The students who founded GBC at UGA in 2021 and got the club off the ground.", image: asset("founders.jpg") },
@@ -84,7 +84,7 @@ const FAQS = [
   { q: "How big of a commitment are the projects?", a: "Whatever you put in. Project teams set their own pace - most meet weekly for a couple hours, plus async work in Discord." },
   { q: "Is there a fee?", a: "No dues, no application fee, no semester fee." },
 ];
-const FAQ_CARDS = [{ num: "01", q: "Do I need to know how to program to join?", a: "No programming experience is necessary." }, { num: "02", q: "How big of a commitment is membership?", a: "Whatever you put in - from one meeting a month to multiple sessions a week." }, { num: "03", q: "What engines does the club use?", a: "Godot, Unity, and Unreal are the staples - custom is allowed." }, { num: "04", q: "Is there a fee or application?", a: "No to both. Just show up." }];
+const FAQ_CARDS = [{ num: "01", q: "Do I need to know how to program to join?", a: "No programming experience is necessary." }, { num: "02", q: "How big of a commitment is membership?", a: "Whatever you put in - from one meeting a month to multiple sessions a week." }, { num: "03", q: "What engines does the club use?", a: "Godot, Unity, and Unreal are the staples but any other engine is also fine." }, { num: "04", q: "Is there a fee or application?", a: "No to both. Just show up." }];
 const SOCIALS = [
   { id: "discord", label: "Discord", handle: "Join the server — primary hub", href: "https://discord.gg/ZZU5xQbv8K" },
   { id: "instagram", label: "Instagram", handle: "@gamebuildersclub", href: "https://www.instagram.com/gamebuildersclub/" },
@@ -161,11 +161,11 @@ export function HomePage() {
 }
 
 function AboutPreview() {
-  return <section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap"><h2 className="about-title">About Us</h2><div className="about-panel"><p>Since 2021, the University of Georgia's Game Builders Club has been dedicated to helping students learn all there is to know about video game design. GBC is centered primarily around video game programming, art, music, and theory, and requires <strong>NO prior experience</strong> with any of these to participate.</p><p>Whether you are interested in building games, composing music, modeling props, drawing sprites, or if you just love video games, you have come to the right place!</p><div style={{ marginTop: 24 }}><Link href="/about" className="btn about-panel-button">More about the club <Icon name="arrow-right" size={16} /></Link></div></div></div><div><div className="about-photo" style={{ backgroundImage: `url(${asset("founders.jpg")})` }} /><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section>;
+  return <section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap"><h2 className="about-title">About Us</h2><div className="about-panel"><p>Since 2021, the University of Georgia&apos;s Game Builders Club has been dedicated to helping students learn all there is to know about video game design. GBC is centered primarily around video game programming, art, music, and theory, and requires <strong>NO prior experience</strong> with any of these to participate.</p><p>Whether you are interested in building games, composing music, modeling props, drawing sprites, or if you just love video games, you have come to the right place!</p><div className="about-panel-cta"><Link href="/about" className="btn about-panel-button">More about the club <Icon name="arrow-right" size={16} /></Link></div></div></div><div><div className="about-photo about-photo-founders" /><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section>;
 }
 
 function Stats() {
-  return <section className="stats-band"><div className="container"><div className="stats">{[["controller", "20+", "Games Built"], ["users", "200+", "Active Members"], ["code", "5", "Years Running"]].map(([icon, n, l]) => <div className="stat" key={l}><div className="stat-icon"><Icon name={icon as IconName} size={32} /></div><div className="stat-number">{n}</div><div className="stat-label">{l}</div></div>)}</div></div></section>;
+  return <section className="stats-band"><div className="container"><div className="stats">{[["controller", "30+", "Games Built"], ["users", "200+", "Active Members"], ["code", "5", "Years Running"]].map(([icon, n, l]) => <div className="stat" key={l}><div className="stat-icon"><Icon name={icon as IconName} size={32} /></div><div className="stat-number">{n}</div><div className="stat-label">{l}</div></div>)}</div></div></section>;
 }
 
 function RecentGames({ games }: { games: Game[] }) {
@@ -173,7 +173,7 @@ function RecentGames({ games }: { games: Game[] }) {
 }
 
 function BottomCta() {
-  return <section className="bottom-cta-wrap"><div className="container"><div className="bottom-cta"><div><div className="bottom-cta-kicker">Get involved</div><h2>No experience? <span>Perfect.</span><br />Most of us started here.</h2><p>Hop in our Discord, come to a Wednesday meeting, or just lurk for a week.</p></div><div className="bottom-cta-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Open Discord</a><Link href="/how-it-works" className="btn btn-lg bottom-cta-secondary">How it works <Icon name="arrow-right" size={18} /></Link></div></div></div></section>;
+  return <section className="bottom-cta-wrap"><div className="container"><div className="bottom-cta"><div><div className="bottom-cta-kicker">Get involved</div><h2>No experience? <span>Perfect.</span><br />Most of us started here.</h2><p>Hop in our Discord, come to a Wednesday meeting, or just lurk for a week.</p></div><div className="bottom-cta-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a><Link href="/how-it-works" className="btn btn-lg bottom-cta-secondary">How it works <Icon name="arrow-right" size={18} /></Link></div></div></div></section>;
 }
 
 type SortOrder = "recent" | "oldest" | "az" | "za";
@@ -195,7 +195,7 @@ export function GamesPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const toggle = (set: Set<string>, setter: (s: Set<string>) => void, val: string) => { const next = new Set(set); next.has(val) ? next.delete(val) : next.add(val); setter(next); setPage(1); };
+  const toggle = (set: Set<string>, setter: (s: Set<string>) => void, val: string) => { const next = new Set(set); if (next.has(val)) { next.delete(val); } else { next.add(val); } setter(next); setPage(1); };
   const filtered = useMemo(() => {
     const base = SORTED_GAMES.filter((g) =>
       (!engines.size || engines.has(g.engine)) &&
@@ -213,6 +213,12 @@ export function GamesPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
   const filterCount = engines.size + semesters.size + kinds.size + playTypes.size + stores.size + (search ? 1 : 0);
+  const matchesSearch = (g: Game) => !search || `${g.title} ${g.tagline} ${g.genres.join(" ")}`.toLowerCase().includes(search.toLowerCase());
+  const withoutEngine   = useMemo(() => SORTED_GAMES.filter((g) => (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g)), [semesters, kinds, playTypes, stores, search]); // eslint-disable-line react-hooks/exhaustive-deps
+  const withoutSemester = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g)), [engines, kinds, playTypes, stores, search]); // eslint-disable-line react-hooks/exhaustive-deps
+  const withoutKind     = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g)), [engines, semesters, playTypes, stores, search]); // eslint-disable-line react-hooks/exhaustive-deps
+  const withoutPlayType = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g)), [engines, semesters, kinds, stores, search]); // eslint-disable-line react-hooks/exhaustive-deps
+  const withoutStore    = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && matchesSearch(g)), [engines, semesters, kinds, playTypes, search]); // eslint-disable-line react-hooks/exhaustive-deps
   const hasFilters = filterCount > 0;
   const reset = () => { setSearch(""); setEngines(new Set()); setSemesters(new Set()); setKinds(new Set()); setPlayTypes(new Set()); setStores(new Set()); setPage(1); };
   return (
@@ -225,15 +231,15 @@ export function GamesPage() {
             <button type="button" className="sidebar-close" aria-label="Close filters" onClick={() => setFiltersOpen(false)}><Icon name="x" size={18} /></button>
           </div>
           <div className="sidebar-body">
-            <FilterGroup title="Game Engine" items={ENGINES.map((e) => ({ id: e.id, label: e.label, count: GAMES.filter((g) => g.engine === e.id).length, icon: e.icon }))} active={engines} onToggle={(v) => toggle(engines, setEngines, v)} />
+            <FilterGroup title="Game Engine" items={ENGINES.map((e) => ({ id: e.id, label: e.label, count: withoutEngine.filter((g) => g.engine === e.id).length, icon: e.icon }))} active={engines} onToggle={(v) => toggle(engines, setEngines, v)} />
             <hr className="filter-divider" />
-            <FilterGroup title="Semester" items={SEMESTERS.map((s) => ({ id: s, label: s, count: GAMES.filter((g) => (g.semesters ?? [g.semester]).includes(s)).length }))} active={semesters} onToggle={(v) => toggle(semesters, setSemesters, v)} />
+            <FilterGroup title="Semester" items={SEMESTERS.map((s) => ({ id: s, label: s, count: withoutSemester.filter((g) => (g.semesters ?? [g.semester]).includes(s)).length }))} active={semesters} onToggle={(v) => toggle(semesters, setSemesters, v)} />
             <hr className="filter-divider" />
-            <FilterGroup title="Format" items={KINDS.map((k) => ({ id: k.id, label: k.label, count: GAMES.filter((g) => g.kind === k.id).length }))} active={kinds} onToggle={(v) => toggle(kinds, setKinds, v)} />
+            <FilterGroup title="Format" items={KINDS.map((k) => ({ id: k.id, label: k.label, count: withoutKind.filter((g) => g.kind === k.id).length }))} active={kinds} onToggle={(v) => toggle(kinds, setKinds, v)} />
             <hr className="filter-divider" />
-            <FilterGroup title="Play Type" items={PLAY_TYPES.map((t) => ({ id: t.id, label: t.label, count: GAMES.filter((g) => gamePlayTypes(g).includes(t.id)).length }))} active={playTypes} onToggle={(v) => toggle(playTypes, setPlayTypes, v)} />
+            <FilterGroup title="Play Type" items={PLAY_TYPES.map((t) => ({ id: t.id, label: t.label, count: withoutPlayType.filter((g) => gamePlayTypes(g).includes(t.id)).length }))} active={playTypes} onToggle={(v) => toggle(playTypes, setPlayTypes, v)} />
             <hr className="filter-divider" />
-            <FilterGroup title="Store" items={STORES.map((s) => ({ id: s.id, label: s.label, count: GAMES.filter((g) => gameStores(g).includes(s.id)).length }))} active={stores} onToggle={(v) => toggle(stores, setStores, v)} />
+            <FilterGroup title="Store" items={STORES.map((s) => ({ id: s.id, label: s.label, count: withoutStore.filter((g) => gameStores(g).includes(s.id)).length }))} active={stores} onToggle={(v) => toggle(stores, setStores, v)} />
             {hasFilters && <button type="button" onClick={reset} className="clear-filters"><Icon name="x" size={14} /> Clear all</button>}
           </div>
         </aside>
@@ -388,7 +394,7 @@ function FilterGroup({ title, items, active, onToggle }: { title: string; items:
 }
 
 export function AboutPage() {
-  return <PageShell><main className="page-enter"><PhotoHero kicker="About the Club" title="We make games together." /><section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap story-copy"><h2 className="about-title">Our Story</h2><p>Game Builders Club was founded in 2021 by a handful of UGA students who wanted to make games and couldn't wait for industry jobs to do it. Five years later we're still small enough that everyone knows everyone, and big enough to pull off ambitious projects.</p><p>We meet once a week, run jams, and ship a class of games every semester. No competitive selection - if you want to make games, you belong here.</p><Link href="/how-it-works" className="btn">How to join <Icon name="arrow-right" size={16} /></Link></div><div><div className="about-photo story-photo" style={{ backgroundImage: `url(${asset("founders.jpg")})` }} /><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section><Values /><Officers /><section className="red-stats"><div className="container">{[["20+", "Games Built"], ["200+", "Active Members"], ["5", "Years Running"]].map(([n, l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div></section></main></PageShell>;
+  return <PageShell><main className="page-enter"><PhotoHero kicker="About the Club" title="We make games together." /><section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap story-copy"><h2 className="about-title">Our Story</h2><p>Game Builders Club was founded in 2021 by a handful of UGA students who wanted to make games and couldn't wait for industry jobs to do it. Five years later we're still small enough that everyone knows everyone, and big enough to pull off ambitious projects.</p><p>We meet once a week, run jams, and ship a class of games every semester. No competitive selection - if you want to make games, you belong here.</p><Link href="/how-it-works" className="btn">How to join <Icon name="arrow-right" size={16} /></Link></div><div><div className="about-photo story-photo" style={{ backgroundImage: `url(${asset("founders.jpg")})` }} /><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section><Values /><Officers /><section className="red-stats"><div className="container">{[["30+", "Games Built"], ["200+", "Active Members"], ["5", "Years Running"]].map(([n, l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div></section></main></PageShell>;
 }
 
 function PhotoHero({ kicker, title, body }: { kicker: string; title: string; body?: string }) {
@@ -404,7 +410,7 @@ function Officers() {
 }
 
 export function HowPage() {
-  return <PageShell><main className="page-enter"><PhotoHero kicker="How it Works" title={'From "curious" to "in the credits."'} body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><div className="section-kicker">The on-ramp</div><h2 className="section-title dark">Four steps. Zero commitment.</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Open Discord invite</a><Link href="/contact" className="btn btn-lg btn-ghost">Or email us <Icon name="mail" size={18} /></Link></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
+  return <PageShell><main className="page-enter"><PhotoHero kicker="How it Works" title={'From "curious" to "in the credits."'} body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><div className="section-kicker">The on-ramp</div><h2 className="section-title dark">Four steps. Zero commitment.</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a><Link href="/contact" className="btn btn-lg btn-ghost">Or email us <Icon name="mail" size={18} /></Link></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
 }
 
 function Meetings() {

@@ -421,6 +421,7 @@ p { margin: 0; }
   box-shadow: var(--shadow-card);
 }
 .about-panel p + p { margin-top: 1em; }
+.about-panel-cta { margin-top: 24px; }
 .about-photo {
   width: 100%;
   height: 665px;
@@ -429,6 +430,7 @@ p { margin: 0; }
   border-radius: 4px;
   box-shadow: var(--shadow-card);
 }
+.about-photo-founders { background-image: url("/assets/founders.jpg"); }
 .about-photo-caption {
   font-family: var(--f-body);
   font-size: 20px;
