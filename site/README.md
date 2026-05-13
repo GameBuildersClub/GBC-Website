@@ -1,5 +1,17 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Internal Project Catalog
+
+Project cards and game detail pages are backed by `src/app/data/projects.json`.
+
+To add a project interactively:
+
+```bash
+npm run add-project
+```
+
+Put local screenshots or cover art in `public/assets`, then enter the filename when prompted. The utility will store it as `/assets/<filename>`. Optional itch.io and Steam links only render when provided.
+
 ## Getting Started
 
 First, run the development server:
