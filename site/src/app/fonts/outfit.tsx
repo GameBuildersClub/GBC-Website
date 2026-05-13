@@ -2,5 +2,6 @@ import { Outfit } from "next/font/google";
 
 export const outfit = Outfit({
     weight: ['300', '400', '500'],
-    subsets: ['latin']
+    subsets: ['latin'],
+    display: 'swap',
 });
