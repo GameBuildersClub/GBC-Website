@@ -976,10 +976,9 @@ p { margin: 0; }
   margin-top: auto;
   padding: 10px 4px 0;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 5px;
   align-items: center;
-  overflow: hidden;
 }
 .game-card-platforms { 
   margin-left: auto;
@@ -2066,7 +2065,7 @@ p { margin: 0; }
 /* ====== Placeholder art (for games without real art) ====== */
 .placeholder-art {
   width: 100%;
-  height: auto;
+  height: 100%;
   position: relative;
   display: flex;
   align-items: center;

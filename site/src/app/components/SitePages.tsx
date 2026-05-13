@@ -180,8 +180,8 @@ function GameCard({ game, priority }: { game: Game; priority?: boolean }) {
       </div>
       <p className="game-card-desc">{game.tagline}</p>
       <div className="game-tags">
-        {game.genres.slice(0, 5).map((t) => <span key={t} className="tag-chip">{t}</span>)}
-        {game.genres.length > 5 && <span className="tag-chip tag-chip-overflow">+{game.genres.length - 5}</span>}
+        {game.genres.slice(0, 3).map((t) => <span key={t} className="tag-chip">{t}</span>)}
+        {game.genres.length > 3 && <span className="tag-chip tag-chip-overflow">+{game.genres.length - 3}</span>}
         <div className="game-card-platforms">
           {stores.map(s => <div key={s} className="store-icon" title={`Available on ${s}`}><Icon name={s as IconName} size={20} /></div>)}
           <EngineIcon engine={game.engine} size={22} />
