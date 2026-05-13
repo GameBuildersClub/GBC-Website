@@ -97,7 +97,6 @@ const FAQS = [
   { q: "How big of a commitment are the projects?", a: "Whatever you put in. Project teams set their own pace - most meet weekly for a couple hours, plus async work in Discord." },
   { q: "Is there a fee?", a: "No dues, no application fee, no semester fee." },
 ];
-const FAQ_CARDS = [{ num: "01", q: "Do I need to know how to program to join?", a: "No programming experience is necessary." }, { num: "02", q: "How big of a commitment is membership?", a: "Whatever you put in - from one meeting a month to multiple sessions a week." }, { num: "03", q: "What engines does the club use?", a: "Godot, Unity, and Unreal are the staples but any other engine is also fine." }, { num: "04", q: "Is there a fee or application?", a: "No to both. Just show up." }];
 const SOCIALS = [
   { id: "discord", label: "Discord", handle: "Join the server — primary hub", href: "https://discord.gg/ZZU5xQbv8K" },
   { id: "instagram", label: "Instagram", handle: "@gamebuildersclub", href: "https://www.instagram.com/gamebuildersclub/" },
@@ -176,11 +175,23 @@ export function HomePage() {
     return () => clearInterval(t);
   }, [paused]);
   const recent = SORTED_GAMES.slice(0, 4);
-  return <PageShell><main className="page-enter"><section className="hero-carousel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>{HERO_SLIDES.map((s, i) => <div key={s.caption} className={`hero-slide ${i === slide ? "active" : ""}`}><div className="hero-slide-bg"><Image src={s.image} alt={s.caption} fill sizes="100vw" priority={i === 0} style={{ objectFit: "cover" }} /></div></div>)}<div className="hero-content"><h1 className="hero-club-name fade-up">Game Builders Club</h1><p className="hero-tagline fade-up fade-up-1">Building games together at the University of Georgia since 2021.</p><div className="hero-actions"><Link href="/how-it-works" className="btn btn-lg"><Icon name="users" size={20} /> Join the club</Link><Link href="/games" className="btn btn-lg hero-secondary">See our games <Icon name="arrow-right" size={18} /></Link></div></div><div className="hero-caption-block"><div className="hero-caption">{HERO_SLIDES[slide].caption}</div><div className="hero-caption-desc">{HERO_SLIDES[slide].desc}</div></div><div className="hero-indicator">{HERO_SLIDES.map((_, i) => <button type="button" key={i} className={i === slide ? "active" : ""} onClick={() => setSlide(i)} aria-label={`Slide ${i + 1}`} aria-current={i === slide} />)}</div></section><AboutPreview /><Stats /><RecentGames games={recent} /><BottomCta /></main></PageShell>;
+  return <PageShell><main className="page-enter"><section className="hero-carousel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>{HERO_SLIDES.map((s, i) => <div key={s.caption} className={`hero-slide ${i === slide ? "active" : ""}`}><div className="hero-slide-bg"><Image src={s.image} alt={s.caption} fill sizes="100vw" priority={i === 0} style={{ objectFit: "cover" }} /></div></div>)}<div className="hero-content"><div className="hero-year-tag fade-up">EST · 2021 · UGA</div><h1 className="hero-club-name fade-up"><span className="hero-word">Game</span><span className="hero-word hero-word-shift">Builders</span><span className="hero-word hero-word-last">Club</span></h1><p className="hero-tagline fade-up fade-up-1"><em>Building games together at the University of Georgia.</em></p><div className="hero-actions"><Link href="/how-it-works" className="btn btn-lg"><Icon name="users" size={20} /> Join the club</Link><Link href="/games" className="btn btn-lg hero-secondary">See our games <Icon name="arrow-right" size={18} /></Link></div></div><div className="hero-indicator">{HERO_SLIDES.map((_, i) => <button type="button" key={i} className={i === slide ? "active" : ""} onClick={() => setSlide(i)} aria-label={`Slide ${i + 1}`} aria-current={i === slide} />)}</div></section><Marquee /><AboutPreview /><Stats /><RecentGames games={recent} /></main></PageShell>;
+}
+
+function Marquee() {
+  const items = ["Shipping games", "Pixel pushing", "Bug squashing", "Jamming", "Prototyping", "Composing", "Drawing sprites", "Playtesting", "Since 2021"];
+  const loop = [...items, ...items, ...items];
+  return (
+    <div className="marquee" aria-hidden>
+      <div className="marquee-track">
+        {loop.map((t, i) => <span key={i} className="marquee-item">{t}<span className="marquee-dot">◆</span></span>)}
+      </div>
+    </div>
+  );
 }
 
 function AboutPreview() {
-  return <section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap"><h2 className="about-title">About Us</h2><div className="about-panel"><p>Since 2021, the University of Georgia&apos;s Game Builders Club has been dedicated to helping students learn all there is to know about video game design. GBC is centered primarily around video game programming, art, music, and theory, and requires <strong>NO prior experience</strong> with any of these to participate.</p><p>Whether you are interested in building games, composing music, modeling props, drawing sprites, or if you just love video games, you have come to the right place!</p><div className="about-panel-cta"><Link href="/about" className="btn about-panel-button">More about the club <Icon name="arrow-right" size={16} /></Link></div></div></div><div><div className="about-photo about-photo-founders" /><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section>;
+  return <section className="section section-cream"><div className="container"><div className="about-block"><div className="about-text-wrap"><h2 className="about-title">About Us</h2><div className="about-panel"><p>Since 2021, the University of Georgia&apos;s Game Builders Club has been dedicated to helping students learn all there is to know about video game design. GBC is centered primarily around video game programming, art, music, and theory, and requires <strong>NO prior experience</strong> with any of these to participate.</p><p>Whether you are interested in building games, composing music, modeling props, drawing sprites, or if you just love video games, you have come to the right place!</p><div className="about-panel-cta"><Link href="/about" className="btn about-panel-button">More about the club <Icon name="arrow-right" size={16} /></Link></div></div></div><div><div className="about-photo about-photo-founders" /><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section>;
 }
 
 function Stats() {
@@ -189,7 +200,7 @@ function Stats() {
 
 function RecentGames({ games }: { games: Game[] }) {
   const kicker = games.length > 0 ? latestSemester(games[0]) : "";
-  return <section className="section"><div className="container"><div className="section-head"><div><div className="section-kicker">{kicker}</div><h2 className="section-title dark">Latest releases</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="games-grid">{games.map((g) => <GameCard key={g.id} game={g} />)}</div></div></section>;
+  return <section className="section section-cream"><div className="container"><div className="section-head"><div><div className="section-kicker">{kicker}</div><h2 className="section-title dark">Latest releases</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="games-grid">{games.map((g) => <GameCard key={g.id} game={g} />)}</div></div></section>;
 }
 
 function BottomCta() {
@@ -215,7 +226,14 @@ export function GamesPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
   const toggle = (set: Set<string>, setter: (s: Set<string>) => void, val: string) => { const next = new Set(set); if (next.has(val)) { next.delete(val); } else { next.add(val); } setter(next); setPage(1); };
+  const matchesSearch = (g: Game, term: string) => {
+    if (!term) return true;
+    const haystack = `${g.title} ${g.tagline} ${g.genres.join(" ")}`.toLowerCase();
+    const keywords = term.split(",").map((k) => k.trim().toLowerCase()).filter(Boolean);
+    return keywords.length === 0 || keywords.every((k) => haystack.includes(k));
+  };
   const filtered = useMemo(() => {
     const base = SORTED_GAMES.filter((g) =>
       (!engines.size || engines.has(g.engine)) &&
@@ -223,7 +241,7 @@ export function GamesPage() {
       (!kinds.size || kinds.has(g.kind)) &&
       (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) &&
       (!stores.size || gameStores(g).some((s) => stores.has(s))) &&
-      (!search || `${g.title} ${g.tagline} ${g.genres.join(" ")}`.toLowerCase().includes(search.toLowerCase()))
+      matchesSearch(g, search)
     );
     if (sort === "oldest") return [...base].sort((a, b) => semesterRank(latestSemester(a)) - semesterRank(latestSemester(b)) || a.title.localeCompare(b.title));
     if (sort === "az") return [...base].sort((a, b) => a.title.localeCompare(b.title));
@@ -233,22 +251,21 @@ export function GamesPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
   const filterCount = engines.size + semesters.size + kinds.size + playTypes.size + stores.size + (search ? 1 : 0);
-  const matchesSearch = (g: Game, term: string) => !term || `${g.title} ${g.tagline} ${g.genres.join(" ")}`.toLowerCase().includes(term.toLowerCase());
-  const withoutEngine   = useMemo(() => SORTED_GAMES.filter((g) => (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [semesters, kinds, playTypes, stores, search]);
+  const withoutEngine = useMemo(() => SORTED_GAMES.filter((g) => (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [semesters, kinds, playTypes, stores, search]);
   const withoutSemester = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, kinds, playTypes, stores, search]);
-  const withoutKind     = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, semesters, playTypes, stores, search]);
+  const withoutKind = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, semesters, playTypes, stores, search]);
   const withoutPlayType = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, semesters, kinds, stores, search]);
-  const withoutStore    = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && matchesSearch(g, search)), [engines, semesters, kinds, playTypes, search]);
+  const withoutStore = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && matchesSearch(g, search)), [engines, semesters, kinds, playTypes, search]);
   const hasFilters = filterCount > 0;
   const reset = () => { setSearch(""); setEngines(new Set()); setSemesters(new Set()); setKinds(new Set()); setPlayTypes(new Set()); setStores(new Set()); setPage(1); };
   return (
     <PageShell>
-      <main className="page-enter games-layout">
+      <main className={`page-enter games-layout${!desktopFiltersOpen ? " desktop-filters-closed" : ""}`}>
         {filtersOpen && <div className="sidebar-overlay" onClick={() => setFiltersOpen(false)} />}
         <aside className={`games-sidebar${filtersOpen ? " sidebar-open" : ""}`}>
           <div className="sidebar-head">
             <h3>FILTERS</h3>
-            <button type="button" className="sidebar-close" aria-label="Close filters" onClick={() => setFiltersOpen(false)}><Icon name="x" size={18} /></button>
+            <button type="button" className="sidebar-close" aria-label="Close filters" onClick={() => { setFiltersOpen(false); setDesktopFiltersOpen(false); }}><Icon name="x" size={18} /></button>
           </div>
           <div className="sidebar-body">
             <FilterGroup title="Game Engine" items={ENGINES.map((e) => ({ id: e.id, label: e.label, count: withoutEngine.filter((g) => g.engine === e.id).length, icon: e.icon }))} active={engines} onToggle={(v) => toggle(engines, setEngines, v)} />
@@ -265,12 +282,19 @@ export function GamesPage() {
         </aside>
         <section className="games-main">
           <div className="games-top">
-            <div><div className="section-kicker">The catalog</div><h1>Games</h1></div>
+            <div>
+              {!desktopFiltersOpen && (
+                <button type="button" className="filters-trigger" style={{ marginBottom: '24px' }} onClick={() => { setFiltersOpen(true); setDesktopFiltersOpen(true); }}>
+                  <Icon name="menu" size={15} /> Show Filters{filterCount > 0 && <span className="filter-count-badge">{filterCount}</span>}
+                </button>
+              )}
+              <div className="games-title-block"><div className="section-kicker">The catalog</div><h1>Games</h1><p>Browse club projects, jams, and long-term games by semester, engine, and play type.</p></div>
+            </div>
             <div className="games-top-right">
-              <button type="button" className="filters-trigger" onClick={() => setFiltersOpen(true)}>
-                <Icon name="search" size={15} /> Filters{filterCount > 0 && <span className="filter-count-badge">{filterCount}</span>}
+              <button type="button" className="filters-trigger mobile-trigger" onClick={() => setFiltersOpen(true)}>
+                <Icon name="menu" size={15} /> Filters{filterCount > 0 && <span className="filter-count-badge">{filterCount}</span>}
               </button>
-              <div className="search-bar"><Icon name="search" size={20} /><input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Search for games" aria-label="Search games" />{search && <button type="button" onClick={() => { setSearch(""); setPage(1); }} aria-label="Clear search"><Icon name="x" size={16} /></button>}</div>
+              <div className="search-bar"><Icon name="search" size={20} /><input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Search title, genre, or vibe" aria-label="Search games" />{search && <button type="button" onClick={() => { setSearch(""); setPage(1); }} aria-label="Clear search"><Icon name="x" size={16} /></button>}</div>
             </div>
           </div>
           <div className="results-meta">
@@ -302,10 +326,10 @@ function SteamVideo({ videoUrl, thumb, steamUrl }: { videoUrl: string; thumb?: s
         hls = new Hls();
         hls.loadSource(videoUrl);
         hls.attachMedia(el);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => el.play().catch(() => {}));
+        hls.on(Hls.Events.MANIFEST_PARSED, () => el.play().catch(() => { }));
       } else if (el.canPlayType("application/vnd.apple.mpegurl")) {
         el.src = videoUrl;
-        el.play().catch(() => {});
+        el.play().catch(() => { });
       }
     });
     return () => { hls?.destroy(); };
@@ -391,7 +415,7 @@ export function GameDetailPage({ slug }: { slug: string }) {
                 <p>{game.tagline}</p>
                 <div className="game-store-actions">
                   {game.itchUrl && <a className="store-badge-itch" href={game.itchUrl} target="_blank" rel="noreferrer" title="Available on itch.io"><Image src="https://static.itch.io/images/badge-color.svg" alt="Available on itch.io" width={146} height={54} /></a>}
-                  {game.steamUrl && <a className="store-badge-steam" href={game.steamUrl} target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.252 0-2.265-1.014-2.265-2.265z"/></svg><span><small>Available on</small>Steam</span></a>}
+                  {game.steamUrl && <a className="store-badge-steam" href={game.steamUrl} target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.252 0-2.265-1.014-2.265-2.265z" /></svg><span><small>Available on</small>Steam</span></a>}
                 </div>
               </aside>
             </div>
@@ -414,7 +438,7 @@ function FilterGroup({ title, items, active, onToggle }: { title: string; items:
 }
 
 export function AboutPage() {
-  return <PageShell><main className="page-enter"><PhotoHero kicker="About the Club" title="We make games together" /><section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap story-copy"><h2 className="about-title">Our Story</h2><p>Game Builders Club was founded in 2021 by a handful of UGA students who wanted to make games and couldn't wait for industry jobs to do it. Five years later we're still small enough that everyone knows everyone, and big enough to pull off ambitious projects.</p><p>We meet once a week, run jams, and ship a class of games every semester. No competitive selection - if you want to make games, you belong here.</p><Link href="/how-it-works" className="btn">How to join <Icon name="arrow-right" size={16} /></Link></div><div><div className="about-photo story-photo"><Image src={asset("founders.jpg")} alt="Original Founders of GBC" fill sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: "cover" }} /></div><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section><Values /><Officers /><section className="red-stats"><div className="container">{CLUB_STATS.map(([, n, l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div></section></main></PageShell>;
+  return <PageShell><main className="page-enter standard-page"><PhotoHero kicker="About the Club" title="We make games together" /><section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap story-copy"><h2 className="about-title">Our Story</h2><p>Game Builders Club was founded in 2021 by a handful of UGA students who wanted to make games and couldn't wait for industry jobs to do it. Five years later we're still small enough that everyone knows everyone, and big enough to pull off ambitious projects.</p><p>We meet once a week, run jams, and ship a class of games every semester. No competitive selection - if you want to make games, you belong here.</p><Link href="/how-it-works" className="btn">How to join <Icon name="arrow-right" size={16} /></Link></div><div><div className="about-photo story-photo"><Image src={asset("founders.jpg")} alt="Original Founders of GBC" fill sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: "cover" }} /></div><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section><Values /><Officers /><section className="red-stats"><div className="container">{CLUB_STATS.map(([, n, l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div></section></main></PageShell>;
 }
 
 function PhotoHero({ kicker, title, body }: { kicker: string; title: string; body?: string }) {
@@ -430,7 +454,7 @@ function Officers() {
 }
 
 export function HowPage() {
-  return <PageShell><main className="page-enter"><PhotoHero kicker="How it Works" title="How GBC works" body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><div className="section-kicker">Getting started</div><h2 className="section-title dark">How to get involved</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a><Link href="/contact" className="btn btn-lg btn-ghost">Or email us <Icon name="mail" size={18} /></Link></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
+  return <PageShell><main className="page-enter standard-page"><PhotoHero kicker="How it Works" title="How GBC works" body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><div className="section-kicker">Getting started</div><h2 className="section-title dark">How to get involved</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
 }
 
 function Meetings() {
@@ -443,10 +467,11 @@ function WhatWeDo() {
 
 export function FaqPage() {
   const [open, setOpen] = useState(0);
-  return <PageShell><main className="page-enter"><section className="faq-hero"><div className="faq-hero-bg"><Image src={asset("showcase.jpg")} alt="" fill sizes="100vw" style={{ objectFit: "cover" }} priority /></div><div className="faq-hero-inner"><h1>Frequently Asked Questions</h1><p>Have a question about our club? Here are the most frequent ones - if yours isn&apos;t here, ping us on Discord or via the contact page.</p></div></section><section className="faq-card-band"><div className="faq-cards">{FAQ_CARDS.map((c) => <div key={c.num} className="faq-card"><div className="faq-card-num">{c.num}</div><div className="faq-card-body"><h4>{c.q}</h4><p>{c.a}</p></div></div>)}</div></section><section className="section faq-section"><div className="faq-list"><div className="section-kicker">Everything else</div><h2 className="section-title dark">The full list</h2>{FAQS.map((item, i) => { const isOpen = open === i; return <div key={item.q} className={`faq-item ${isOpen ? "open" : ""}`}><button type="button" className="faq-q" onClick={() => setOpen(isOpen ? -1 : i)} aria-expanded={isOpen ? "true" : "false"}><span>{item.q}</span><span className="faq-icon" /></button>{isOpen && <div className="faq-a">{item.a}</div>}</div>; })}</div><div className="faq-contact"><p>Didn&apos;t find your answer?</p><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord"><Icon name="discord" size={18} /> Ask in Discord</a><Link href="/contact" className="btn btn-ghost">Contact a board member <Icon name="arrow-right" size={16} /></Link></div></section></main></PageShell>;
+  return <PageShell><main className="page-enter standard-page"><PhotoHero kicker="FAQ" title="Frequently Asked Questions" body="Have a question about our club? Here are the most frequent ones - if yours isn&apos;t here, ping us on Discord or via the contact page." /><section className="section faq-section"><div className="faq-list"><h2 className="section-title dark" style={{ marginBottom: "32px" }}>Questions</h2>{FAQS.map((item, i) => { const isOpen = open === i; return <div key={item.q} className={`faq-item ${isOpen ? "open" : ""}`}><button type="button" className="faq-q" onClick={() => setOpen(isOpen ? -1 : i)} aria-expanded={isOpen ? "true" : "false"}><span>{item.q}</span><span className="faq-icon" /></button>{isOpen && <div className="faq-a">{item.a}</div>}</div>; })}</div><div className="faq-contact"><p>Didn&apos;t find your answer?</p><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord"><Icon name="discord" size={18} /> Ask in Discord</a><Link href="/contact" className="btn btn-ghost">Contact a board member <Icon name="arrow-right" size={16} /></Link></div></section></main></PageShell>;
 }
 
 export function ContactPage() {
+  const meeting = MEETINGS[0];
   return (
     <PageShell>
       <main className="page-enter">
@@ -454,29 +479,48 @@ export function ContactPage() {
           <div className="container">
             <div className="section-kicker">Say hi</div>
             <h1>Get in touch.</h1>
-            <p>Discord is the fastest way to reach us. You can also email the board directly.</p>
+            <p>Discord is the fastest way to reach us. Project channels, meeting updates, and club questions all live there.</p>
           </div>
         </section>
-        <section className="section">
-          <div className="container contact-grid-simple">
-            <div>
-              <h3 className="social-heading">Find us</h3>
-              <p className="social-copy">Discord is the hub; the rest is for following along.</p>
-              <div className="social-list">
-                {SOCIALS.map((s) => (
-                  <a key={s.id} href={s.href} target="_blank" rel="noreferrer" className={`social-row ${s.id === "discord" ? "discord" : ""}`}>
-                    <div className="social-icon-wrap"><Icon name={s.id as IconName} size={20} /></div>
-                    <div><strong>{s.label}</strong><span>{s.handle}</span></div>
-                    <span className="arrow"><Icon name="arrow-up-right" size={18} /></span>
-                  </a>
-                ))}
-                <a href="mailto:ugagbc@gmail.com" className="social-row">
-                  <div className="social-icon-wrap"><Icon name="mail" size={20} /></div>
-                  <div><strong>Email</strong><span>ugagbc@gmail.com</span></div>
-                  <span className="arrow"><Icon name="arrow-up-right" size={18} /></span>
-                </a>
+        <section className="section contact-section">
+          <div className="container contact-page-grid">
+            <div className="contact-primary-card">
+              <div className="contact-card-label">Best first stop</div>
+              <h2>Join the Discord</h2>
+              <p>Ask questions, find project teams, get meeting reminders, or just see what people are making this week.</p>
+              <div className="contact-actions">
+                <a href="https://discord.gg/ZZU5xQbv8K" target="_blank" rel="noreferrer" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a>
+                <a href="mailto:ugagbc@gmail.com" className="btn btn-ghost btn-lg">Email us <Icon name="mail" size={18} /></a>
               </div>
             </div>
+            <aside className="contact-side-stack">
+              <div className="contact-note-card">
+                <div className="contact-note-icon"><Icon name="clock" size={22} /></div>
+                <div>
+                  <h3>Come to a meeting</h3>
+                  <p>{meeting.day} · {meeting.time}</p>
+                  <p>{meeting.location}</p>
+                </div>
+              </div>
+              <div className="contact-social-card">
+                <h3 className="social-heading">Follow along</h3>
+                <p className="social-copy">Discord is the hub; socials are for updates and showcases.</p>
+                <div className="social-list">
+                  {SOCIALS.map((s) => (
+                    <a key={s.id} href={s.href} target="_blank" rel="noreferrer" className={`social-row ${s.id === "discord" ? "discord" : ""}`}>
+                      <div className="social-icon-wrap"><Icon name={s.id as IconName} size={20} /></div>
+                      <div><strong>{s.label}</strong><span>{s.handle}</span></div>
+                      <span className="arrow"><Icon name="arrow-up-right" size={18} /></span>
+                    </a>
+                  ))}
+                  <a href="mailto:ugagbc@gmail.com" className="social-row">
+                    <div className="social-icon-wrap"><Icon name="mail" size={20} /></div>
+                    <div><strong>Email</strong><span>ugagbc@gmail.com</span></div>
+                    <span className="arrow"><Icon name="arrow-up-right" size={18} /></span>
+                  </a>
+                </div>
+              </div>
+            </aside>
           </div>
         </section>
       </main>
