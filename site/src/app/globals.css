@@ -281,8 +281,7 @@ p { margin: 0; }
 .hero-slide-bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
 }
 .hero-slide-bg::after {
   content: '';
@@ -688,9 +687,9 @@ p { margin: 0; }
   width: 100%;
   aspect-ratio: 279 / 201;
   background: #D9D9D9;
-  background-size: cover;
-  background-position: center;
   border-radius: var(--r-md);
+  position: relative;
+  overflow: hidden;
 }
 .game-card-row {
   display: flex;

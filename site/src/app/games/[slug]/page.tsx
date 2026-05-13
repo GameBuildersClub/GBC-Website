@@ -1,9 +1,13 @@
-"use client";
-
-import { useParams } from "next/navigation";
+import projectsData from "../../data/projects";
 import { GameDetailPage } from "../../components/SitePages";
 
-export default function GameDetail() {
-  const params = useParams<{ slug: string }>();
-  return <GameDetailPage slug={params.slug} />;
+type Props = { params: Promise<{ slug: string }> };
+
+export function generateStaticParams() {
+  return (projectsData as { slug: string }[]).map((g) => ({ slug: g.slug }));
+}
+
+export default async function GameDetail({ params }: Props) {
+  const { slug } = await params;
+  return <GameDetailPage slug={slug} />;
 }

@@ -134,7 +134,7 @@ function FooterLinks({ title, links }: { title: string; links: string[][] }) {
 }
 
 function GameArt({ game }: { game: Game }) {
-  if (game.image) return <div className="game-card-image" style={{ backgroundImage: `url(${game.image})` }} />;
+  if (game.image) return <div className="game-card-image"><Image src={game.image} alt={game.title} fill sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" style={{ objectFit: "cover" }} /></div>;
   return <div className="game-card-image placeholder-art"><span className="label">{game.title}</span></div>;
 }
 
@@ -157,7 +157,7 @@ export function HomePage() {
   const [slide, setSlide] = useState(0);
   useEffect(() => { const t = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 6000); return () => clearInterval(t); }, []);
   const recent = SORTED_GAMES.slice(0, 4);
-  return <PageShell><main className="page-enter"><section className="hero-carousel">{HERO_SLIDES.map((s, i) => <div key={s.caption} className={`hero-slide ${i === slide ? "active" : ""}`}><div className="hero-slide-bg" style={{ backgroundImage: `url(${s.image})` }} /></div>)}<div className="hero-content"><h1 className="hero-club-name fade-up">Game Builders Club</h1><p className="hero-tagline fade-up fade-up-1">Building games together at the University of Georgia since 2021.</p><div className="hero-actions"><Link href="/how-it-works" className="btn btn-lg"><Icon name="discord" size={20} /> Join the club</Link><Link href="/games" className="btn btn-lg hero-secondary">See our games <Icon name="arrow-right" size={18} /></Link></div></div><div className="hero-caption-block"><div className="hero-caption">{HERO_SLIDES[slide].caption}</div><div className="hero-caption-desc">{HERO_SLIDES[slide].desc}</div></div><div className="hero-indicator">{HERO_SLIDES.map((_, i) => <button key={i} className={i === slide ? "active" : ""} onClick={() => setSlide(i)} aria-label={`Slide ${i + 1}`} />)}</div></section><AboutPreview /><Stats /><RecentGames games={recent} /><BottomCta /></main></PageShell>;
+  return <PageShell><main className="page-enter"><section className="hero-carousel">{HERO_SLIDES.map((s, i) => <div key={s.caption} className={`hero-slide ${i === slide ? "active" : ""}`}><div className="hero-slide-bg"><Image src={s.image} alt={s.caption} fill sizes="100vw" priority={i === 0} style={{ objectFit: "cover" }} /></div></div>)}<div className="hero-content"><h1 className="hero-club-name fade-up">Game Builders Club</h1><p className="hero-tagline fade-up fade-up-1">Building games together at the University of Georgia since 2021.</p><div className="hero-actions"><Link href="/how-it-works" className="btn btn-lg"><Icon name="discord" size={20} /> Join the club</Link><Link href="/games" className="btn btn-lg hero-secondary">See our games <Icon name="arrow-right" size={18} /></Link></div></div><div className="hero-caption-block"><div className="hero-caption">{HERO_SLIDES[slide].caption}</div><div className="hero-caption-desc">{HERO_SLIDES[slide].desc}</div></div><div className="hero-indicator">{HERO_SLIDES.map((_, i) => <button type="button" key={i} className={i === slide ? "active" : ""} onClick={() => setSlide(i)} aria-label={`Slide ${i + 1}`} />)}</div></section><AboutPreview /><Stats /><RecentGames games={recent} /><BottomCta /></main></PageShell>;
 }
 
 function AboutPreview() {
@@ -343,7 +343,7 @@ export function GameDetailPage({ slug }: { slug: string }) {
                     {isVideoActive
                       ? <SteamVideo videoUrl={game.steamVideoUrl!} thumb={game.steamVideoThumb} steamUrl={game.steamUrl!} />
                       : activeImage
-                        ? <div key={activeImage} className="game-detail-cover-image"><Image src={activeImage} alt="" fill style={{ objectFit: "cover" }} /></div>
+                        ? <div key={activeImage} className="game-detail-cover-image"><Image src={activeImage} alt="" fill sizes="(max-width: 900px) 100vw, 60vw" style={{ objectFit: "cover" }} /></div>
                         : <div className="game-detail-cover-empty"><span>{game.title}</span></div>}
                   </div>
                   {totalSlides > 1 && <>
@@ -361,13 +361,13 @@ export function GameDetailPage({ slug }: { slug: string }) {
                     )}
                     {gallery.map((image, i) => {
                       const slideIndex = hasVideo ? i + 1 : i;
-                      return <button type="button" key={image} className={`gallery-thumb ${active === slideIndex ? "active" : ""}`} onClick={() => setActive(slideIndex)} aria-label={`Screenshot ${i + 1}`}><Image src={image} alt="" fill style={{ objectFit: "cover" }} /></button>;
+                      return <button type="button" key={image} className={`gallery-thumb ${active === slideIndex ? "active" : ""}`} onClick={() => setActive(slideIndex)} aria-label={`Screenshot ${i + 1}`}><Image src={image} alt="" fill sizes="120px" style={{ objectFit: "cover" }} /></button>;
                     })}
                   </div>
                 )}
               </div>
               <aside className="game-detail-side">
-                {game.image && <div className="game-detail-poster"><Image src={game.image} alt={game.title} fill style={{ objectFit: "cover" }} /></div>}
+                {game.image && <div className="game-detail-poster"><Image src={game.image} alt={game.title} fill sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: "cover" }} /></div>}
                 <p>{game.tagline}</p>
                 <div className="game-store-actions">
                   {game.itchUrl && <a className="store-badge-itch" href={game.itchUrl} target="_blank" rel="noreferrer" title="Available on itch.io"><Image src="https://static.itch.io/images/badge-color.svg" alt="Available on itch.io" width={146} height={54} /></a>}
