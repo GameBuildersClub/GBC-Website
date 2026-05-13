@@ -801,6 +801,11 @@ p { margin: 0; }
 .recent-games-row > * {
   flex: 0 0 min(300px, 75vw);
   scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+}
+.recent-games-row > * .game-card {
+  flex: 1;
 }
 .recent-carousel {
   position: relative;
@@ -879,6 +884,11 @@ p { margin: 0; }
 .game-card-no-image .game-card-row { margin-top: 16px; }
 .game-card-entry {
   opacity: 1;
+  display: flex;
+  flex-direction: column;
+}
+.game-card-entry .game-card {
+  flex: 1;
 }
 .game-card-entry.delay-0 { animation-delay: 0ms; }
 .game-card-entry.delay-1 { animation-delay: 45ms; }
@@ -966,9 +976,10 @@ p { margin: 0; }
   margin-top: auto;
   padding: 10px 4px 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 5px;
   align-items: center;
+  overflow: hidden;
 }
 .game-card-platforms { 
   margin-left: auto;

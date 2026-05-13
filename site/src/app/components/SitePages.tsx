@@ -148,12 +148,12 @@ function FooterLinks({ title, links }: { title: string; links: string[][] }) {
   return <div><h5>{title}</h5><div className="footer-links">{links.map(([label, href]) => href.startsWith("/") ? <Link key={label} href={href}>{label}</Link> : <a key={label} href={href}>{label}</a>)}</div></div>;
 }
 
-function GameArt({ game }: { game: Game }) {
+function GameArt({ game, priority }: { game: Game; priority?: boolean }) {
   const isJam = game.kind === "jam";
   const typeLabel = isJam ? "Game Jam" : "Long-term";
   return (
     <div className="game-card-image">
-      {game.image ? <Image src={game.image} alt={game.title} fill sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" style={{ objectFit: "cover" }} /> : <div className="placeholder-art"><span className="label">{game.title}</span></div>}
+      {game.image ? <Image src={game.image} alt={game.title} fill sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" style={{ objectFit: "cover" }} priority={priority} /> : <div className="placeholder-art"><span className="label">{game.title}</span></div>}
       <div className={`game-card-kind-badge ${game.kind}`}>{typeLabel}</div>
     </div>
   );
@@ -166,14 +166,14 @@ function EngineIcon({ engine, size = 24 }: { engine: string; size?: number }) {
   return <div className="engine-logo-fallback" title={e.label}>{engine === "unreal" ? "UE" : "<>"}</div>;
 }
 
-function GameCard({ game }: { game: Game }) {
+function GameCard({ game, priority }: { game: Game; priority?: boolean }) {
   const stores = [];
   if (game.steamUrl) stores.push("steam");
   if (game.itchUrl) stores.push("itch");
 
   return (
     <Link href={`/games/${game.slug}`} className="game-card">
-      <GameArt game={game} />
+      <GameArt game={game} priority={priority} />
       <div className="game-card-row">
         <div className="game-card-title">{game.title}</div>
         <span className={`semester-badge${game.semesters && game.semesters.length > 1 ? " semester-badge-range" : ""}`}>{game.semester}</span>
@@ -242,7 +242,7 @@ function RecentGames({ games }: { games: Game[] }) {
   useEffect(() => { updateNav(); window.addEventListener("resize", updateNav); return () => window.removeEventListener("resize", updateNav); }, []);
   const scroll = (dir: number) => { const el = trackRef.current; if (!el) return; el.scrollBy({ left: dir * 320, behavior: "smooth" }); };
   return (
-    <section className="section section-cream"><div className="container"><div className="section-head"><div><div className="section-kicker">{kicker}</div><h2 className="section-title dark">Latest releases</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="recent-carousel"><button type="button" className={`recent-arrow recent-arrow-prev${canPrev ? "" : " disabled"}`} aria-label="Previous" onClick={() => scroll(-1)}><Icon name="chevron-right" size={18} /></button><div className="recent-games-row" ref={trackRef} onScroll={updateNav}>{games.map((g) => <GameCard key={g.id} game={g} />)}</div><button type="button" className={`recent-arrow${canNext ? "" : " disabled"}`} aria-label="Next" onClick={() => scroll(1)}><Icon name="chevron-right" size={18} /></button></div></div></section>
+    <section className="section section-cream"><div className="container"><div className="section-head"><div><div className="section-kicker">{kicker}</div><h2 className="section-title dark">Latest releases</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="recent-carousel"><button type="button" className={`recent-arrow recent-arrow-prev${canPrev ? "" : " disabled"}`} aria-label="Previous" onClick={() => scroll(-1)}><Icon name="chevron-right" size={18} /></button><div className="recent-games-row" ref={trackRef} onScroll={updateNav}>{games.map((g, i) => <GameCard key={g.id} game={g} priority={i === 0} />)}</div><button type="button" className={`recent-arrow${canNext ? "" : " disabled"}`} aria-label="Next" onClick={() => scroll(1)}><Icon name="chevron-right" size={18} /></button></div></div></section>
   );
 }
 
