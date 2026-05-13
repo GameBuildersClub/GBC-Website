@@ -82,6 +82,12 @@ const OFFICERS = [
   { name: "Divesh", initials: "D", role: "Web Dev Officer" },
 ];
 const MEETINGS = [{ day: "Wednesday", kind: "Workshop / Social / Project Work", time: "6:30 - 8:00 PM", location: "SLC 345 · Hybrid" }];
+const CLUB_FOUNDED = 2021;
+const CLUB_STATS: [IconName, string, string][] = [
+  ["controller", "30+", "Games Built"],
+  ["users", "200+", "Active Members"],
+  ["code", `${new Date().getFullYear() - CLUB_FOUNDED}`, "Years Running"],
+];
 const STEPS = [{ num: "01", title: "Join the Discord", body: "The fastest way in. Project channels, voice rooms, jam announcements all live there." }, { num: "02", title: "Week 1 is intro night", body: "Come meet the club, learn how the semester works, and get familiar with the project process." }, { num: "03", title: "Week 2 is pitch night", body: "Project leads pitch their game ideas, then members pick preferences through a Google Form." }, { num: "04", title: "Week 3 is team announcements", body: "Teams are announced based on what people selected, then project work days begin." }];
 const FAQS = [
   { q: "Do I need programming experience to join?", a: "No programming experience is necessary. About a third of our members are artists, writers, or musicians. We need every one of those skills on a typical project." },
@@ -162,9 +168,15 @@ function PageShell({ children }: { children: ReactNode }) {
 
 export function HomePage() {
   const [slide, setSlide] = useState(0);
-  useEffect(() => { const t = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 6000); return () => clearInterval(t); }, []);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused) return;
+    if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 6000);
+    return () => clearInterval(t);
+  }, [paused]);
   const recent = SORTED_GAMES.slice(0, 4);
-  return <PageShell><main className="page-enter"><section className="hero-carousel">{HERO_SLIDES.map((s, i) => <div key={s.caption} className={`hero-slide ${i === slide ? "active" : ""}`}><div className="hero-slide-bg"><Image src={s.image} alt={s.caption} fill sizes="100vw" priority={i === 0} style={{ objectFit: "cover" }} /></div></div>)}<div className="hero-content"><h1 className="hero-club-name fade-up">Game Builders Club</h1><p className="hero-tagline fade-up fade-up-1">Building games together at the University of Georgia since 2021.</p><div className="hero-actions"><Link href="/how-it-works" className="btn btn-lg"><Icon name="users" size={20} /> Join the club</Link><Link href="/games" className="btn btn-lg hero-secondary">See our games <Icon name="arrow-right" size={18} /></Link></div></div><div className="hero-caption-block"><div className="hero-caption">{HERO_SLIDES[slide].caption}</div><div className="hero-caption-desc">{HERO_SLIDES[slide].desc}</div></div><div className="hero-indicator">{HERO_SLIDES.map((_, i) => <button type="button" key={i} className={i === slide ? "active" : ""} onClick={() => setSlide(i)} aria-label={`Slide ${i + 1}`} />)}</div></section><AboutPreview /><Stats /><RecentGames games={recent} /><BottomCta /></main></PageShell>;
+  return <PageShell><main className="page-enter"><section className="hero-carousel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>{HERO_SLIDES.map((s, i) => <div key={s.caption} className={`hero-slide ${i === slide ? "active" : ""}`}><div className="hero-slide-bg"><Image src={s.image} alt={s.caption} fill sizes="100vw" priority={i === 0} style={{ objectFit: "cover" }} /></div></div>)}<div className="hero-content"><h1 className="hero-club-name fade-up">Game Builders Club</h1><p className="hero-tagline fade-up fade-up-1">Building games together at the University of Georgia since 2021.</p><div className="hero-actions"><Link href="/how-it-works" className="btn btn-lg"><Icon name="users" size={20} /> Join the club</Link><Link href="/games" className="btn btn-lg hero-secondary">See our games <Icon name="arrow-right" size={18} /></Link></div></div><div className="hero-caption-block"><div className="hero-caption">{HERO_SLIDES[slide].caption}</div><div className="hero-caption-desc">{HERO_SLIDES[slide].desc}</div></div><div className="hero-indicator">{HERO_SLIDES.map((_, i) => <button type="button" key={i} className={i === slide ? "active" : ""} onClick={() => setSlide(i)} aria-label={`Slide ${i + 1}`} aria-current={i === slide} />)}</div></section><AboutPreview /><Stats /><RecentGames games={recent} /><BottomCta /></main></PageShell>;
 }
 
 function AboutPreview() {
@@ -172,7 +184,7 @@ function AboutPreview() {
 }
 
 function Stats() {
-  return <section className="stats-band"><div className="container"><div className="stats">{[["controller", "30+", "Games Built"], ["users", "200+", "Active Members"], ["code", "5", "Years Running"]].map(([icon, n, l]) => <div className="stat" key={l}><div className="stat-icon"><Icon name={icon as IconName} size={32} /></div><div className="stat-number">{n}</div><div className="stat-label">{l}</div></div>)}</div></div></section>;
+  return <section className="stats-band"><div className="container"><div className="stats">{CLUB_STATS.map(([icon, n, l]) => <div className="stat" key={l}><div className="stat-icon"><Icon name={icon} size={32} /></div><div className="stat-number">{n}</div><div className="stat-label">{l}</div></div>)}</div></div></section>;
 }
 
 function RecentGames({ games }: { games: Game[] }) {
@@ -213,7 +225,7 @@ export function GamesPage() {
       (!stores.size || gameStores(g).some((s) => stores.has(s))) &&
       (!search || `${g.title} ${g.tagline} ${g.genres.join(" ")}`.toLowerCase().includes(search.toLowerCase()))
     );
-    if (sort === "oldest") return [...base].reverse();
+    if (sort === "oldest") return [...base].sort((a, b) => semesterRank(latestSemester(a)) - semesterRank(latestSemester(b)) || a.title.localeCompare(b.title));
     if (sort === "az") return [...base].sort((a, b) => a.title.localeCompare(b.title));
     if (sort === "za") return [...base].sort((a, b) => b.title.localeCompare(a.title));
     return base;
@@ -221,12 +233,12 @@ export function GamesPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
   const filterCount = engines.size + semesters.size + kinds.size + playTypes.size + stores.size + (search ? 1 : 0);
-  const matchesSearch = (g: Game) => !search || `${g.title} ${g.tagline} ${g.genres.join(" ")}`.toLowerCase().includes(search.toLowerCase());
-  const withoutEngine   = useMemo(() => SORTED_GAMES.filter((g) => (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g)), [semesters, kinds, playTypes, stores, search]); // eslint-disable-line react-hooks/exhaustive-deps
-  const withoutSemester = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g)), [engines, kinds, playTypes, stores, search]); // eslint-disable-line react-hooks/exhaustive-deps
-  const withoutKind     = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g)), [engines, semesters, playTypes, stores, search]); // eslint-disable-line react-hooks/exhaustive-deps
-  const withoutPlayType = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g)), [engines, semesters, kinds, stores, search]); // eslint-disable-line react-hooks/exhaustive-deps
-  const withoutStore    = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && matchesSearch(g)), [engines, semesters, kinds, playTypes, search]); // eslint-disable-line react-hooks/exhaustive-deps
+  const matchesSearch = (g: Game, term: string) => !term || `${g.title} ${g.tagline} ${g.genres.join(" ")}`.toLowerCase().includes(term.toLowerCase());
+  const withoutEngine   = useMemo(() => SORTED_GAMES.filter((g) => (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [semesters, kinds, playTypes, stores, search]);
+  const withoutSemester = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, kinds, playTypes, stores, search]);
+  const withoutKind     = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, semesters, playTypes, stores, search]);
+  const withoutPlayType = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!stores.size || gameStores(g).some((s) => stores.has(s))) && matchesSearch(g, search)), [engines, semesters, kinds, stores, search]);
+  const withoutStore    = useMemo(() => SORTED_GAMES.filter((g) => (!engines.size || engines.has(g.engine)) && (!semesters.size || (g.semesters ?? [g.semester]).some((s) => semesters.has(s))) && (!kinds.size || kinds.has(g.kind)) && (!playTypes.size || gamePlayTypes(g).some((t) => playTypes.has(t))) && matchesSearch(g, search)), [engines, semesters, kinds, playTypes, search]);
   const hasFilters = filterCount > 0;
   const reset = () => { setSearch(""); setEngines(new Set()); setSemesters(new Set()); setKinds(new Set()); setPlayTypes(new Set()); setStores(new Set()); setPage(1); };
   return (
@@ -258,7 +270,7 @@ export function GamesPage() {
               <button type="button" className="filters-trigger" onClick={() => setFiltersOpen(true)}>
                 <Icon name="search" size={15} /> Filters{filterCount > 0 && <span className="filter-count-badge">{filterCount}</span>}
               </button>
-              <div className="search-bar"><Icon name="search" size={20} /><input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Search for games" />{search && <button type="button" onClick={() => { setSearch(""); setPage(1); }} aria-label="Clear search"><Icon name="x" size={16} /></button>}</div>
+              <div className="search-bar"><Icon name="search" size={20} /><input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Search for games" aria-label="Search games" />{search && <button type="button" onClick={() => { setSearch(""); setPage(1); }} aria-label="Clear search"><Icon name="x" size={16} /></button>}</div>
             </div>
           </div>
           <div className="results-meta">
@@ -318,7 +330,7 @@ function GameEmbed({ url, title }: { url: string; title: string }) {
       </div>
       <div className="game-embed-frame" ref={frameRef}>
         {playing
-          ? <iframe src={url} title={`${title} — play in browser`} allow="autoplay; fullscreen *; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share" allowFullScreen />
+          ? <iframe src={url} title={`${title} — play in browser`} sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-forms" allow="autoplay; fullscreen *; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share" allowFullScreen />
           : <div className="game-embed-placeholder"><button type="button" className="play-in-browser-btn" onClick={() => setPlaying(true)}><Icon name="controller" size={22} />Play in browser</button></div>}
       </div>
     </section>
@@ -369,7 +381,7 @@ export function GameDetailPage({ slug }: { slug: string }) {
                     )}
                     {gallery.map((image, i) => {
                       const slideIndex = hasVideo ? i + 1 : i;
-                      return <button type="button" key={image} className={`gallery-thumb ${active === slideIndex ? "active" : ""}`} onClick={() => setActive(slideIndex)} aria-label={`Screenshot ${i + 1}`}><Image src={image} alt="" fill sizes="120px" style={{ objectFit: "cover" }} /></button>;
+                      return <button type="button" key={image} className={`gallery-thumb ${active === slideIndex ? "active" : ""}`} onClick={() => setActive(slideIndex)} aria-label={`Screenshot ${i + 1}`}><Image src={image} alt="" fill sizes="120px" style={{ objectFit: "cover" }} aria-hidden /></button>;
                     })}
                   </div>
                 )}
@@ -386,8 +398,8 @@ export function GameDetailPage({ slug }: { slug: string }) {
             {game.itchEmbedUrl && <GameEmbed url={game.itchEmbedUrl} title={game.title} />}
             <div className="game-detail-info">
               <section><h2>Team</h2><p>{game.team > 0 ? `${game.team} club members` : "Team info unavailable"}</p></section>
-              <section><h2>About this game</h2><p>{game.tagline}</p><div className="game-tags">{game.genres.map((genre) => <span key={genre} className="tag-chip">{genre}</span>)}</div></section>
-              <section><h2>Details</h2><div className="gp-meta"><div className="gp-meta-row"><span>Semester</span><span>{game.semester}</span></div><div className="gp-meta-row"><span>Format</span><span>{KINDS.find((k) => k.id === game.kind)?.label ?? game.kind}</span></div><div className="gp-meta-row"><span>Engine</span><span>{ENGINES.find((e) => e.id === game.engine)?.label ?? game.engine}</span></div></div></section>
+              <section><h2>Genres</h2><div className="game-tags">{game.genres.map((genre) => <span key={genre} className="tag-chip">{genre}</span>)}</div></section>
+              <section><h2>Details</h2><div className="gp-meta"><div className="gp-meta-row"><span>Semester{(game.semesters?.length ?? 1) > 1 ? "s" : ""}</span><span>{(game.semesters ?? [game.semester]).join(", ")}</span></div><div className="gp-meta-row"><span>Format</span><span>{KINDS.find((k) => k.id === game.kind)?.label ?? game.kind}</span></div><div className="gp-meta-row"><span>Engine</span><span>{ENGINES.find((e) => e.id === game.engine)?.label ?? game.engine}</span></div></div></section>
             </div>
           </div>
         </section>
@@ -398,11 +410,11 @@ export function GameDetailPage({ slug }: { slug: string }) {
 
 function FilterGroup({ title, items, active, onToggle }: { title: string; items: { id: string; label: string; count: number; icon?: string | null }[]; active: Set<string>; onToggle: (id: string) => void }) {
   const [open, setOpen] = useState(true);
-  return <div className="filter-group"><button className={`filter-group-head ${open ? "open" : ""}`} onClick={() => setOpen(!open)}><span className="arrow"><Icon name="chevron-right" size={12} stroke={3} /></span>{title}</button>{open && <div className="filter-options">{items.filter((i) => i.count > 0).map((i) => <button key={i.id} className={`filter-option ${active.has(i.id) ? "active" : ""}`} onClick={() => onToggle(i.id)}>{i.icon && <span className="filter-icon"><img src={i.icon} alt="" /></span>}<span className="label">{i.label}</span><span className="badge">{i.count}</span></button>)}</div>}</div>;
+  return <div className="filter-group"><button className={`filter-group-head ${open ? "open" : ""}`} onClick={() => setOpen(!open)}><span className="arrow"><Icon name="chevron-right" size={12} stroke={3} /></span>{title}</button>{open && <div className="filter-options">{items.filter((i) => i.count > 0).map((i) => <button key={i.id} className={`filter-option ${active.has(i.id) ? "active" : ""}`} onClick={() => onToggle(i.id)}>{i.icon && <span className="filter-icon"><Image src={i.icon} alt="" width={16} height={16} /></span>}<span className="label">{i.label}</span><span className="badge">{i.count}</span></button>)}</div>}</div>;
 }
 
 export function AboutPage() {
-  return <PageShell><main className="page-enter"><PhotoHero kicker="About the Club" title="We make games together" /><section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap story-copy"><h2 className="about-title">Our Story</h2><p>Game Builders Club was founded in 2021 by a handful of UGA students who wanted to make games and couldn't wait for industry jobs to do it. Five years later we're still small enough that everyone knows everyone, and big enough to pull off ambitious projects.</p><p>We meet once a week, run jams, and ship a class of games every semester. No competitive selection - if you want to make games, you belong here.</p><Link href="/how-it-works" className="btn">How to join <Icon name="arrow-right" size={16} /></Link></div><div><div className="about-photo story-photo"><Image src={asset("founders.jpg")} alt="Original Founders of GBC" fill sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: "cover" }} /></div><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section><Values /><Officers /><section className="red-stats"><div className="container">{[["30+", "Games Built"], ["200+", "Active Members"], ["5", "Years Running"]].map(([n, l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div></section></main></PageShell>;
+  return <PageShell><main className="page-enter"><PhotoHero kicker="About the Club" title="We make games together" /><section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap story-copy"><h2 className="about-title">Our Story</h2><p>Game Builders Club was founded in 2021 by a handful of UGA students who wanted to make games and couldn't wait for industry jobs to do it. Five years later we're still small enough that everyone knows everyone, and big enough to pull off ambitious projects.</p><p>We meet once a week, run jams, and ship a class of games every semester. No competitive selection - if you want to make games, you belong here.</p><Link href="/how-it-works" className="btn">How to join <Icon name="arrow-right" size={16} /></Link></div><div><div className="about-photo story-photo"><Image src={asset("founders.jpg")} alt="Original Founders of GBC" fill sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: "cover" }} /></div><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section><Values /><Officers /><section className="red-stats"><div className="container">{CLUB_STATS.map(([, n, l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div></section></main></PageShell>;
 }
 
 function PhotoHero({ kicker, title, body }: { kicker: string; title: string; body?: string }) {
@@ -414,7 +426,7 @@ function Values() {
 }
 
 function Officers() {
-  return <section className="section"><div className="container"><div className="section-kicker">The 2026-27 Board</div><h2 className="section-title">The 2026-27 board</h2><div className="officer-grid">{OFFICERS.map((o) => <div className="officer-card" key={o.role}><div>{o.initials}</div><section><h5>{o.name}</h5><p>{o.role}</p></section></div>)}</div></div></section>;
+  return <section className="section"><div className="container"><div className="section-kicker">Leadership</div><h2 className="section-title">The 2026-27 board</h2><div className="officer-grid">{OFFICERS.map((o) => <div className="officer-card" key={o.role}><div>{o.initials}</div><section><h5>{o.name}</h5><p>{o.role}</p></section></div>)}</div></div></section>;
 }
 
 export function HowPage() {
@@ -431,7 +443,7 @@ function WhatWeDo() {
 
 export function FaqPage() {
   const [open, setOpen] = useState(0);
-  return <PageShell><main className="page-enter"><section className="faq-hero"><div className="faq-hero-bg"><Image src={asset("showcase.jpg")} alt="" fill sizes="100vw" style={{ objectFit: "cover" }} priority /></div><div className="faq-hero-inner"><h1>Frequently Asked Questions</h1><p>Have a question about our club? Here are the most frequent ones - if yours isn&apos;t here, ping us on Discord or via the contact page.</p></div></section><section className="faq-card-band"><div className="faq-cards">{FAQ_CARDS.map((c) => <div key={c.num} className="faq-card"><div className="faq-card-num">{c.num}</div><div className="faq-card-body"><h4>{c.q}</h4><p>{c.a}</p></div></div>)}</div></section><section className="section faq-section"><div className="faq-list"><div className="section-kicker">Everything else</div><h2 className="section-title dark">The full list</h2>{FAQS.map((item, i) => <div key={item.q} className={`faq-item ${open === i ? "open" : ""}`}><button type="button" className="faq-q" onClick={() => setOpen(open === i ? -1 : i)}><span>{item.q}</span><span className="faq-icon" /></button>{open === i && <div className="faq-a">{item.a}</div>}</div>)}</div><div className="faq-contact"><p>Didn&apos;t find your answer?</p><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord"><Icon name="discord" size={18} /> Ask in Discord</a><Link href="/contact" className="btn btn-ghost">Contact a board member <Icon name="arrow-right" size={16} /></Link></div></section></main></PageShell>;
+  return <PageShell><main className="page-enter"><section className="faq-hero"><div className="faq-hero-bg"><Image src={asset("showcase.jpg")} alt="" fill sizes="100vw" style={{ objectFit: "cover" }} priority /></div><div className="faq-hero-inner"><h1>Frequently Asked Questions</h1><p>Have a question about our club? Here are the most frequent ones - if yours isn&apos;t here, ping us on Discord or via the contact page.</p></div></section><section className="faq-card-band"><div className="faq-cards">{FAQ_CARDS.map((c) => <div key={c.num} className="faq-card"><div className="faq-card-num">{c.num}</div><div className="faq-card-body"><h4>{c.q}</h4><p>{c.a}</p></div></div>)}</div></section><section className="section faq-section"><div className="faq-list"><div className="section-kicker">Everything else</div><h2 className="section-title dark">The full list</h2>{FAQS.map((item, i) => { const isOpen = open === i; return <div key={item.q} className={`faq-item ${isOpen ? "open" : ""}`}><button type="button" className="faq-q" onClick={() => setOpen(isOpen ? -1 : i)} aria-expanded={isOpen ? "true" : "false"}><span>{item.q}</span><span className="faq-icon" /></button>{isOpen && <div className="faq-a">{item.a}</div>}</div>; })}</div><div className="faq-contact"><p>Didn&apos;t find your answer?</p><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord"><Icon name="discord" size={18} /> Ask in Discord</a><Link href="/contact" className="btn btn-ghost">Contact a board member <Icon name="arrow-right" size={16} /></Link></div></section></main></PageShell>;
 }
 
 export function ContactPage() {
