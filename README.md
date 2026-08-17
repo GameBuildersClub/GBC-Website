@@ -1,5 +1,5 @@
 # GBC Website
-
+ 
 The official website for the Game Builders Club at the University of Georgia.
 
 Built with [Next.js](https://nextjs.org), deployed on [Cloudflare Workers](https://developers.cloudflare.com/workers/) via [OpenNext](https://opennext.js.org/cloudflare).
