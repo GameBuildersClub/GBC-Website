@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import projectsData from "./data/projects";
-
-const BASE_URL = "https://ugagbc.com";
+import { BASE_URL } from "./lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

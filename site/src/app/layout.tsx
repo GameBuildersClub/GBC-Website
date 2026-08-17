@@ -3,28 +3,42 @@ import "./globals.css";
 import { outfit } from "./fonts/outfit";
 import { poppins } from "./fonts/poppins";
 import { orienta } from "./fonts/orienta";
-
-const BASE_URL = "https://ugagbc.com";
-const DESC = "The University of Georgia's student-run game development club. We build games, run jams, and teach each other everything from code to art to music.";
+import { BASE_URL, JsonLd, OG_IMAGE, OG_IMAGE_H, OG_IMAGE_W, SITE_DESC, SITE_NAME, siteGraph } from "./lib/seo";
 
 export const metadata: Metadata = {
-  title: { default: "Game Builders Club", template: "%s | Game Builders Club" },
-  description: DESC,
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESC,
   metadataBase: new URL(BASE_URL),
+  applicationName: SITE_NAME,
+  keywords: [
+    "Game Builders Club",
+    "UGA game development club",
+    "University of Georgia games",
+    "student game development",
+    "game jam Athens GA",
+    "learn game development",
+  ],
+  alternates: { canonical: "/" },
   openGraph: {
-    siteName: "Game Builders Club",
-    title: "Game Builders Club",
-    description: DESC,
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESC,
     url: BASE_URL,
     type: "website",
-    images: [{ url: "/assets/club-fall-2025-showcase.jpg", width: 4032, height: 3024, alt: "Game Builders Club" }],
+    locale: "en_US",
+    images: [{ url: OG_IMAGE, width: OG_IMAGE_W, height: OG_IMAGE_H, alt: `${SITE_NAME} — UGA` }],
   },
   twitter: {
     card: "summary_large_image",
     site: "@GameBuilderClub",
-    title: "Game Builders Club",
-    description: DESC,
-    images: ["/assets/club-fall-2025-showcase.jpg"],
+    title: SITE_NAME,
+    description: SITE_DESC,
+    images: [OG_IMAGE],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
 };
 
@@ -35,7 +49,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${outfit.className} ${poppins.className} ${orienta.variable}`}>{children}</body>
+      <body className={`${outfit.className} ${poppins.className} ${orienta.variable}`}>
+        {children}
+        <JsonLd data={siteGraph} />
+      </body>
     </html>
   );
 }

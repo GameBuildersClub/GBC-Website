@@ -13,6 +13,9 @@ UGA Game Builders Club website. Next.js 16, App Router, TypeScript strict. Deplo
 | `site/next.config.ts` | Image remote patterns for external domains |
 | `site/wrangler.jsonc` | Cloudflare Worker name, compat flags, bindings |
 | `site/open-next.config.ts` | OpenNext adapter config (caching overrides) |
+| `site/src/app/lib/seo.tsx` | SEO constants, `JsonLd`, `pageOg()`, schema builders |
+| `site/src/app/data/faqs.ts` | FAQ copy, shared by the page and its FAQPage schema |
+| `site/src/app/llms.txt/route.ts` | Generates `/llms.txt` from project + FAQ data |
 
 ## Before making changes
 1. Read `SitePages.tsx` fully before editing — many components share state and data.

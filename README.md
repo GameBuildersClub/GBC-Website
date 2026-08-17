@@ -45,10 +45,15 @@ npm run deploy
 Automatic deploys use **Workers Builds**: in the Cloudflare dashboard, Workers &
 Pages → the `gbc-website` Worker → Settings → Builds → connect this repo with
 
-| Setting        | Value                              |
-| -------------- | ---------------------------------- |
-| Root directory | `site`                             |
-| Build command  | `npx opennextjs-cloudflare build`  |
-| Deploy command | `npx wrangler deploy`              |
+| Setting        | Value                 |
+| -------------- | --------------------- |
+| Root directory | `site`                |
+| Build command  | `npm run cf:build`    |
+| Deploy command | `npx wrangler deploy` |
+
+`cf:build` runs the OpenNext build **and** `populateCache local`, which copies the
+prerendered pages into `.open-next/assets` so the deployed Worker can answer them
+from static assets. Skipping that step still works but makes every request boot the
+Next.js server.
 
 Pushes to `main` then build and deploy; other branches get preview URLs.

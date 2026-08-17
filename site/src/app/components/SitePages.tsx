@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import projectsData from "../data/projects";
+import faqs from "../data/faqs";
 
 type IconName = "arrow-right" | "arrow-up-right" | "chevron-right" | "search" | "discord" | "instagram" | "youtube" | "twitter" | "github" | "itch" | "steam" | "mail" | "pin" | "clock" | "controller" | "sparkle" | "users" | "code" | "x" | "unreal" | "custom" | "menu" | "expand";
 type Game = {
@@ -89,14 +90,6 @@ const CLUB_STATS: [IconName, string, string][] = [
   ["code", `${new Date().getFullYear() - CLUB_FOUNDED}`, "Years Running"],
 ];
 const STEPS = [{ num: "01", title: "Join the Discord", body: "The fastest way in. Project channels, voice rooms, jam announcements all live there." }, { num: "02", title: "Week 1 is intro night", body: "Come meet the club, learn how the semester works, and get familiar with the project process." }, { num: "03", title: "Week 2 is pitch night", body: "Project leads pitch their game ideas, then members pick preferences through a Google Form." }, { num: "04", title: "Week 3 is team announcements", body: "Teams are announced based on what people selected, then project work days begin." }];
-const FAQS = [
-  { q: "Do I need programming experience to join?", a: "No programming experience is necessary. About a third of our members are artists, writers, or musicians. We need every one of those skills on a typical project." },
-  { q: "I want to lead my own game project. Where do I start?", a: "Talk to the Projects Officer at a Wednesday meetup, or DM them on Discord. Pitches usually happen during the second week of club - all you need is a Game Design Documentation (GDD) and a presentation." },
-  { q: "What game engines are used?", a: "We have used Godot, Unity, and Unreal Engine to create games. However, game engine usage is not limited to these three as it is up to a team leader's discretion." },
-  { q: "Is there a deadline to join club projects?", a: "Project interest is collected through a Google Form after week 2 pitches, and teams are announced in week 3 based on what people picked. Members can also join long-term project teams midway through the semester when a project has room." },
-  { q: "How big of a commitment are the projects?", a: "Whatever you put in. Project teams set their own pace - most meet weekly for a couple hours, plus async work in Discord." },
-  { q: "Is there a fee?", a: "No dues, no application fee, no semester fee." },
-];
 const SOCIALS = [
   { id: "discord", label: "Discord", handle: "Join the server — primary hub", href: "https://discord.gg/ZZU5xQbv8K" },
   { id: "instagram", label: "Instagram", handle: "@gamebuildersclub", href: "https://www.instagram.com/gamebuildersclub/" },
@@ -196,16 +189,29 @@ function PageShell({ children }: { children: ReactNode }) {
 }
 
 export function HomePage() {
-  const [slide, setSlide] = useState(0);
+  // `reach` is the highest slide index allowed to fetch its image. Every slide sits
+  // in the viewport (they stack at opacity 0), so without it the browser downloads
+  // all four up front. It rides along with `slide` in one state value so advancing
+  // stays a single pure update.
+  const [{ slide, reach }, setHero] = useState({ slide: 0, reach: 1 });
   const [paused, setPaused] = useState(false);
+  const goTo = useCallback((next: number) => {
+    setHero(({ reach: r }) => ({ slide: next, reach: Math.max(r, Math.min(next + 1, HERO_SLIDES.length - 1)) }));
+  }, []);
   useEffect(() => {
     if (paused) return;
     if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 4000);
+    const t = setInterval(
+      () => setHero(({ slide: s, reach: r }) => {
+        const next = (s + 1) % HERO_SLIDES.length;
+        return { slide: next, reach: Math.max(r, Math.min(next + 1, HERO_SLIDES.length - 1)) };
+      }),
+      4000,
+    );
     return () => clearInterval(t);
   }, [paused]);
   const recent = SORTED_GAMES.slice(0, 4);
-  return <PageShell><main className="page-enter"><section className="hero-carousel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>{HERO_SLIDES.map((s, i) => <div key={s.caption} className={`hero-slide ${i === slide ? "active" : ""}`}><div className="hero-slide-bg"><Image src={s.image} alt={s.caption} fill sizes="100vw" priority={i === 0} style={{ objectFit: "cover" }} /></div></div>)}<div className="hero-content"><div className="hero-year-tag fade-up">EST · 2021 · UGA</div><h1 className="hero-club-name fade-up"><span className="hero-word">Game</span><span className="hero-word hero-word-shift">Builders</span><span className="hero-word hero-word-last">Club</span></h1><p className="hero-tagline fade-up fade-up-1"><em>Building games together at the University of Georgia.</em></p><div className="hero-actions"><Link href="/how-it-works" className="btn btn-lg"><Icon name="users" size={20} /> Join the club</Link><Link href="/games" className="btn btn-lg hero-secondary">See our games <Icon name="arrow-right" size={18} /></Link></div></div><div className="hero-indicator">{HERO_SLIDES.map((_, i) => <button type="button" key={i} className={i === slide ? "active" : ""} onClick={() => setSlide(i)} aria-label={`Slide ${i + 1}`} aria-current={i === slide} />)}</div></section><Marquee /><AboutPreview /><Stats /><RecentGames games={recent} /></main></PageShell>;
+  return <PageShell><main className="page-enter"><section className="hero-carousel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>{HERO_SLIDES.map((s, i) => <div key={s.caption} className={`hero-slide ${i === slide ? "active" : ""}`}><div className="hero-slide-bg">{i <= reach && <Image src={s.image} alt={s.caption} fill sizes="100vw" priority={i === 0} style={{ objectFit: "cover" }} />}</div></div>)}<div className="hero-content"><h1 className="hero-club-name fade-up"><span className="hero-word">Game</span>{" "}<span className="hero-word hero-word-shift">Builders</span>{" "}<span className="hero-word hero-word-last">Club</span></h1><p className="hero-tagline fade-up fade-up-1"><em>Building games together at the University of Georgia.</em></p><div className="hero-actions"><Link href="/how-it-works" className="btn btn-lg"><Icon name="users" size={20} /> Join the club</Link><Link href="/games" className="btn btn-lg hero-secondary">See our games <Icon name="arrow-right" size={18} /></Link></div></div><div className="hero-indicator">{HERO_SLIDES.map((_, i) => <button type="button" key={i} className={i === slide ? "active" : ""} onClick={() => goTo(i)} aria-label={`Slide ${i + 1}`} aria-current={i === slide} />)}</div></section><Marquee /><AboutPreview /><Stats /><RecentGames games={recent} /></main></PageShell>;
 }
 
 function Marquee() {
@@ -221,7 +227,7 @@ function Marquee() {
 }
 
 function AboutPreview() {
-  return <section className="section section-cream"><div className="container"><div className="about-block"><div className="about-text-wrap"><h2 className="about-title">About Us</h2><div className="about-panel"><p>Since 2021, the University of Georgia&apos;s Game Builders Club has been dedicated to helping students learn all there is to know about video game design. GBC is centered primarily around video game programming, art, music, and theory, and requires <strong>NO prior experience</strong> with any of these to participate.</p><p>Whether you are interested in building games, composing music, modeling props, drawing sprites, or if you just love video games, you have come to the right place!</p><div className="about-panel-cta"><Link href="/about" className="btn about-panel-button">More about the club <Icon name="arrow-right" size={16} /></Link></div></div></div><div><div className="about-photo about-photo-founders" /><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section>;
+  return <section className="section section-cream"><div className="container"><div className="about-block"><div className="about-text-wrap"><h2 className="about-title">About Us</h2><div className="about-panel"><p>Since 2021, the University of Georgia&apos;s Game Builders Club has been dedicated to helping students learn all there is to know about video game design. GBC is centered primarily around video game programming, art, music, and theory, and requires <strong>NO prior experience</strong> with any of these to participate.</p><p>Whether you are interested in building games, composing music, modeling props, drawing sprites, or if you just love video games, you have come to the right place!</p><div className="about-panel-cta"><Link href="/about" className="btn about-panel-button">More about the club <Icon name="arrow-right" size={16} /></Link></div></div></div><div><div className="about-photo about-photo-founders"><Image src={asset("founders.jpg")} alt="Original Founders of GBC" fill sizes="(max-width: 900px) 100vw, 50vw" style={{ objectFit: "cover" }} /></div><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section>;
 }
 
 function Stats() {
@@ -229,7 +235,6 @@ function Stats() {
 }
 
 function RecentGames({ games }: { games: Game[] }) {
-  const kicker = games.length > 0 ? latestSemester(games[0]) : "";
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
@@ -242,12 +247,12 @@ function RecentGames({ games }: { games: Game[] }) {
   useEffect(() => { updateNav(); window.addEventListener("resize", updateNav); return () => window.removeEventListener("resize", updateNav); }, []);
   const scroll = (dir: number) => { const el = trackRef.current; if (!el) return; el.scrollBy({ left: dir * 320, behavior: "smooth" }); };
   return (
-    <section className="section section-cream"><div className="container"><div className="section-head"><div><div className="section-kicker">{kicker}</div><h2 className="section-title dark">Latest releases</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="recent-carousel"><button type="button" className={`recent-arrow recent-arrow-prev${canPrev ? "" : " disabled"}`} aria-label="Previous" onClick={() => scroll(-1)}><Icon name="chevron-right" size={18} /></button><div className="recent-games-row" ref={trackRef} onScroll={updateNav}>{games.map((g, i) => <GameCard key={g.id} game={g} priority={i === 0} />)}</div><button type="button" className={`recent-arrow${canNext ? "" : " disabled"}`} aria-label="Next" onClick={() => scroll(1)}><Icon name="chevron-right" size={18} /></button></div></div></section>
+    <section className="section section-cream"><div className="container"><div className="section-head"><div><h2 className="section-title dark">Latest releases</h2></div><Link href="/games" className="btn btn-ghost">All games <Icon name="arrow-right" size={16} /></Link></div><div className="recent-carousel"><button type="button" className={`recent-arrow recent-arrow-prev${canPrev ? "" : " disabled"}`} aria-label="Previous" onClick={() => scroll(-1)}><Icon name="chevron-right" size={18} /></button><div className="recent-games-row" ref={trackRef} onScroll={updateNav}>{games.map((g, i) => <GameCard key={g.id} game={g} priority={i === 0} />)}</div><button type="button" className={`recent-arrow${canNext ? "" : " disabled"}`} aria-label="Next" onClick={() => scroll(1)}><Icon name="chevron-right" size={18} /></button></div></div></section>
   );
 }
 
 function BottomCta() {
-  return <section className="bottom-cta-wrap"><div className="container"><div className="bottom-cta"><div><div className="bottom-cta-kicker">Get involved</div><h2>No experience? <span>Perfect.</span><br />Most of us started here</h2><p>Hop in our Discord, come to a Wednesday meeting, or just lurk for a week.</p></div><div className="bottom-cta-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a><Link href="/how-it-works" className="btn btn-lg bottom-cta-secondary">How it works <Icon name="arrow-right" size={18} /></Link></div></div></div></section>;
+  return <section className="bottom-cta-wrap"><div className="container"><div className="bottom-cta"><div><h2>No experience? <span>Perfect.</span><br />Most of us started here</h2><p>Hop in our Discord, come to a Wednesday meeting, or just lurk for a week.</p></div><div className="bottom-cta-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a><Link href="/how-it-works" className="btn btn-lg bottom-cta-secondary">How it works <Icon name="arrow-right" size={18} /></Link></div></div></div></section>;
 }
 
 type SortOrder = "recent" | "oldest" | "az" | "za";
@@ -345,7 +350,7 @@ export function GamesPage() {
         <section className="games-main">
           <div className="games-top">
             <div>
-              <div className="games-title-block"><div className="section-kicker">The catalog</div><h1>Games</h1><p>Browse club projects, jams, and long-term games by semester, engine, and play type.</p></div>
+              <div className="games-title-block"><h1>Games</h1><p>Browse club projects, jams, and long-term games by semester, engine, and play type.</p></div>
             </div>
             <div className="games-top-right">
               <button type="button" className="filters-trigger mobile-trigger" aria-expanded={filtersOpen} onClick={() => setFiltersOpen(true)}>
@@ -494,36 +499,36 @@ function FilterGroup({ title, items, active, onToggle }: { title: string; items:
 }
 
 export function AboutPage() {
-  return <PageShell><main className="page-enter standard-page"><PhotoHero kicker="About the Club" title="We make games together" /><section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap story-copy"><h2 className="about-title">Our Story</h2><p>Game Builders Club was founded in 2021 by a handful of UGA students who wanted to make games and couldn&apos;t wait for industry jobs to do it. Five years later we&apos;re still small enough that everyone knows everyone, and big enough to pull off ambitious projects.</p><p>We meet once a week, run jams, and ship a class of games every semester. No competitive selection - if you want to make games, you belong here.</p><Link href="/how-it-works" className="btn">How to join <Icon name="arrow-right" size={16} /></Link></div><div><div className="about-photo story-photo"><Image src={asset("founders.jpg")} alt="Original Founders of GBC" fill sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: "cover" }} /></div><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section><Values /><Officers /><section className="red-stats"><div className="container">{CLUB_STATS.map(([, n, l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div></section></main></PageShell>;
+  return <PageShell><main className="page-enter standard-page"><PhotoHero title="About" /><section className="section"><div className="container"><div className="about-block"><div className="about-text-wrap story-copy"><h2 className="about-title">Our Story</h2><p>Game Builders Club was founded in 2021 by a handful of UGA students who wanted to make games and couldn&apos;t wait for industry jobs to do it. Five years later we&apos;re still small enough that everyone knows everyone, and big enough to pull off ambitious projects.</p><p>We meet once a week, run jams, and ship a class of games every semester. No competitive selection - if you want to make games, you belong here.</p><Link href="/how-it-works" className="btn">How to join <Icon name="arrow-right" size={16} /></Link></div><div><div className="about-photo story-photo"><Image src={asset("founders.jpg")} alt="Original Founders of GBC" fill sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: "cover" }} /></div><div className="about-photo-caption">Original Founders of GBC</div></div></div></div></section><Values /><Officers /><section className="red-stats"><div className="container">{CLUB_STATS.map(([, n, l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div></section></main></PageShell>;
 }
 
-function PhotoHero({ kicker, title, body }: { kicker: string; title: string; body?: string }) {
-  return <section className="photo-hero"><div className="photo-hero-bg"><Image src={asset("showcase.jpg")} alt="" fill sizes="100vw" style={{ objectFit: "cover" }} priority /></div><div className="container"><div className="section-kicker">{kicker}</div><h1>{title}</h1>{body && <p>{body}</p>}</div></section>;
+function PhotoHero({ title, body }: { title: string; body?: string }) {
+  return <section className="photo-hero"><div className="photo-hero-bg"><Image src={asset("showcase.jpg")} alt="" fill sizes="100vw" style={{ objectFit: "cover" }} priority /></div><div className="container"><h1>{title}</h1>{body && <p>{body}</p>}</div></section>;
 }
 
 function Values() {
-  return <section className="values-band"><div className="container"><div className="section-kicker">What we value</div><h2 className="section-title">What GBC is built on</h2><div className="value-grid">{[["01", "Ship something", "We focus on finishing. Smaller scope, real game, something you can actually show people."], ["02", "Cross-discipline", "Games need more than code. We connect programmers, artists, writers, and composers from the start."], ["03", "Open to everyone", "Never made a game before? That’s fine. Everyone starts somewhere, and we make sure you’re not starting alone."]].map(([n, t, b]) => <div className="value-card" key={n}><strong>{n}</strong><h3>{t}</h3><p>{b}</p></div>)}</div></div></section>;
+  return <section className="values-band"><div className="container"><h2 className="section-title">What GBC is built on</h2><div className="value-grid">{[["01", "Ship something", "We focus on finishing. Smaller scope, real game, something you can actually show people."], ["02", "Cross-discipline", "Games need more than code. We connect programmers, artists, writers, and composers from the start."], ["03", "Open to everyone", "Never made a game before? That’s fine. Everyone starts somewhere, and we make sure you’re not starting alone."]].map(([n, t, b]) => <div className="value-card" key={n}><strong>{n}</strong><h3>{t}</h3><p>{b}</p></div>)}</div></div></section>;
 }
 
 function Officers() {
-  return <section className="section"><div className="container"><div className="section-kicker">Leadership</div><h2 className="section-title">The 2026-27 board</h2><div className="officer-grid">{OFFICERS.map((o) => <div className="officer-card" key={o.role}><div>{o.initials}</div><section><h5>{o.name}</h5><p>{o.role}</p></section></div>)}</div></div></section>;
+  return <section className="section"><div className="container"><h2 className="section-title">The 2026-27 board</h2><div className="officer-grid">{OFFICERS.map((o) => <div className="officer-card" key={o.role}><div>{o.initials}</div><section><h5>{o.name}</h5><p>{o.role}</p></section></div>)}</div></div></section>;
 }
 
 export function HowPage() {
-  return <PageShell><main className="page-enter standard-page"><PhotoHero kicker="How it Works" title="How GBC works" body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><div className="section-kicker">Getting started</div><h2 className="section-title dark">How to get involved</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
+  return <PageShell><main className="page-enter standard-page"><PhotoHero title="How It Works" body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><h2 className="section-title dark">How to get involved</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg"><Icon name="discord" size={20} /> Join Discord</a></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
 }
 
 function Meetings() {
-  return <section className="meetings-band"><div className="container"><div className="section-kicker">Schedule · Spring 2026</div><h2 className="section-title dark">Meeting Information</h2><div className="meeting-grid">{MEETINGS.map((m) => <div key={m.kind} className="meeting-card"><div className="kind">{m.kind}</div><div className="day">{m.day}</div><div className="time"><Icon name="clock" size={14} /> {m.time}</div><div className="location"><Icon name="pin" size={14} /> {m.location}</div></div>)}</div></div></section>;
+  return <section className="meetings-band"><div className="container"><h2 className="section-title dark">Meeting Information</h2><div className="meeting-grid">{MEETINGS.map((m) => <div key={m.kind} className="meeting-card"><div className="kind">{m.kind}</div><div className="day">{m.day}</div><div className="time"><Icon name="clock" size={14} /> {m.time}</div><div className="location"><Icon name="pin" size={14} /> {m.location}</div></div>)}</div></div></section>;
 }
 
 function WhatWeDo() {
-  return <section className="section"><div className="container"><div className="section-kicker">What we do</div><h2 className="section-title dark">What we do each semester</h2><div className="value-grid">{[["controller", "Long-Term Projects", "Teams of 4-8 build larger games across a semester or longer timeline. We pair leads with newcomers."], ["sparkle", "Game Jams", "A weekend of caffeine, pixel art and last-minute scope cuts. We run 3 per year."], ["code", "Workshops", "Bring-a-laptop sessions: shaders, level design, music for games, marketing on itch."]].map(([i, t, b]) => <div className="simple-card" key={t}><div><Icon name={i as IconName} size={22} /></div><h3>{t}</h3><p>{b}</p></div>)}</div></div></section>;
+  return <section className="section"><div className="container"><h2 className="section-title dark">What we do each semester</h2><div className="value-grid">{[["controller", "Long-Term Projects", "Teams of 4-8 build larger games across a semester or longer timeline. We pair leads with newcomers."], ["sparkle", "Game Jams", "A weekend of caffeine, pixel art and last-minute scope cuts. We run 3 per year."], ["code", "Workshops", "Bring-a-laptop sessions: shaders, level design, music for games, marketing on itch."]].map(([i, t, b]) => <div className="simple-card" key={t}><div><Icon name={i as IconName} size={22} /></div><h3>{t}</h3><p>{b}</p></div>)}</div></div></section>;
 }
 
 export function FaqPage() {
   const [open, setOpen] = useState(0);
-  return <PageShell><main className="page-enter standard-page"><PhotoHero kicker="FAQ" title="Frequently Asked Questions" body="Have a question about our club? Here are the most frequent ones - if yours isn&apos;t here, ping us on Discord or via the contact page." /><section className="section faq-section"><div className="faq-list"><h2 className="section-title dark" style={{ marginBottom: "32px" }}>Questions</h2>{FAQS.map((item, i) => { const isOpen = open === i; return <div key={item.q} className={`faq-item ${isOpen ? "open" : ""}`}><button type="button" className="faq-q" onClick={() => setOpen(isOpen ? -1 : i)} aria-expanded={isOpen ? "true" : "false"}><span>{item.q}</span><span className="faq-icon" /></button>{isOpen && <div className="faq-a">{item.a}</div>}</div>; })}</div><div className="faq-contact"><p>Didn&apos;t find your answer?</p><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord"><Icon name="discord" size={18} /> Ask in Discord</a><Link href="/contact" className="btn btn-ghost">Contact a board member <Icon name="arrow-right" size={16} /></Link></div></section></main></PageShell>;
+  return <PageShell><main className="page-enter standard-page"><PhotoHero title="Frequently Asked Questions" body="Have a question about our club? Here are the most frequent ones - if yours isn&apos;t here, ping us on Discord or via the contact page." /><section className="section faq-section"><div className="faq-list"><h2 className="section-title dark" style={{ marginBottom: "32px" }}>Questions</h2>{faqs.map((item, i) => { const isOpen = open === i; return <div key={item.q} className={`faq-item ${isOpen ? "open" : ""}`}><button type="button" className="faq-q" onClick={() => setOpen(isOpen ? -1 : i)} aria-expanded={isOpen ? "true" : "false"}><span>{item.q}</span><span className="faq-icon" /></button>{isOpen && <div className="faq-a">{item.a}</div>}</div>; })}</div><div className="faq-contact"><p>Didn&apos;t find your answer?</p><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord"><Icon name="discord" size={18} /> Ask in Discord</a><Link href="/contact" className="btn btn-ghost">Contact a board member <Icon name="arrow-right" size={16} /></Link></div></section></main></PageShell>;
 }
 
 export function ContactPage() {
@@ -533,7 +538,7 @@ export function ContactPage() {
       <main className="page-enter">
         <section className="contact-hero">
           <div className="container">
-            <div className="section-kicker">Say hi</div>
+            
             <h1>Get in touch.</h1>
             <p>Discord is the fastest way to reach us. Project channels, meeting updates, and club questions all live there.</p>
           </div>

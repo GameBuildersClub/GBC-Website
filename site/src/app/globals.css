@@ -220,6 +220,9 @@ p { margin: 0; }
 }
 @media (max-width: 760px) {
   .nav-links { display: none; }
+  /* drop the now-empty third column, else its trailing gap unanchors the
+     socials/hamburger group from the right edge */
+  .nav-inner { grid-template-columns: auto 1fr; }
 }
 .nav-hamburger {
   display: none;
@@ -519,7 +522,12 @@ p { margin: 0; }
   border-radius: 4px;
   box-shadow: var(--shadow-card);
 }
-.about-photo-founders { background-image: url("/assets/founders.jpg"); }
+/* holds a fill <Image> rather than a CSS background, so the 1.2 MB source gets
+   resized by the image optimizer instead of shipping whole */
+.about-photo-founders {
+  position: relative;
+  overflow: hidden;
+}
 .about-photo-caption {
   font-family: var(--f-body);
   font-size: 20px;
@@ -2150,14 +2158,7 @@ p { margin: 0; }
   max-width: 560px;
   position: relative;
   z-index: 1;
-}
-.games-title-block .section-kicker {
-  color: var(--c-red);
-}
-.games-title-block .section-kicker::before {
-  background: var(--c-red);
-}
-.games-title-block p {
+}.games-title-block p {
   margin-top: 12px;
   font-size: 14px;
   color: var(--c-ink-2);
@@ -2179,30 +2180,7 @@ p { margin: 0; }
     min-width: 0;
     max-width: none;
   }
-}
-.section-kicker {
-  font-family: var(--f-accent);
-  font-style: italic;
-  font-size: 18px;
-  color: var(--c-red);
-  letter-spacing: 0.01em;
-  text-transform: none;
-  margin-bottom: 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-kicker::before {
-  content: '';
-  width: 28px;
-  height: 2px;
-  background: var(--c-red);
-  display: inline-block;
-}
-.section-dark .section-kicker::before { background: var(--c-red-light); }
-.photo-hero .section-kicker::before { background: rgba(255,255,255,0.75); }
-.contact-hero .section-kicker::before { background: var(--c-red); }
-.bottom-cta-wrap {
+}.bottom-cta-wrap {
   padding: 0 0 80px;
 }
 .bottom-cta {
@@ -2221,16 +2199,7 @@ p { margin: 0; }
   .bottom-cta { grid-template-columns: 1fr; padding: 40px 28px; gap: 28px; }
   .bottom-cta-actions { display: flex; flex-direction: column; gap: 12px; }
   .bottom-cta-actions .btn { justify-content: center; }
-}
-.bottom-cta-kicker {
-  font-family: var(--f-body);
-  font-size: 12px;
-  color: var(--c-red-light);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-.bottom-cta h2 {
+}.bottom-cta h2 {
   font-family: var(--f-display);
   font-weight: 500;
   font-size: clamp(36px, 4.5vw, 56px);
@@ -2338,11 +2307,7 @@ p { margin: 0; }
   z-index: 2;
   padding-top: 50px;
   padding-bottom: 54px;
-}
-.photo-hero .section-kicker {
-  color: rgba(255,255,255,0.75);
-}
-.photo-hero h1 {
+}.photo-hero h1 {
   font-size: clamp(42px, 6vw, 68px);
   max-width: 1000px;
   margin: 0 auto;
@@ -2518,11 +2483,7 @@ p { margin: 0; }
   color: #fff;
   padding: 42px 0 48px;
   border-bottom: 3px solid var(--c-red);
-}
-.contact-hero .section-kicker {
-  color: var(--c-red-light);
-}
-.contact-hero h1 {
+}.contact-hero h1 {
   font-size: clamp(40px, 5vw, 58px);
   max-width: 900px;
 }
@@ -2767,9 +2728,7 @@ p { margin: 0; }
 .section-dark > * { position: relative; z-index: 1; }
 .section-dark .section-title,
 .section-dark .section-title.dark,
-.section-dark h2 { color: #fff; }
-.section-dark .section-kicker { color: var(--c-red-light); }
-.section-dark .btn-ghost {
+.section-dark h2 { color: #fff; }.section-dark .btn-ghost {
   color: #fff;
   border-color: rgba(255,255,255,0.25);
 }
@@ -2805,28 +2764,7 @@ p { margin: 0; }
     box-shadow: 0 18px 40px rgba(0,0,0,0.18), 0 4px 10px rgba(0,0,0,0.10);
     border: 8px solid #fff;
   }
-}
-
-/* ====== Weirder hero ====== */
-.hero-year-tag {
-  font-family: var(--f-accent);
-  font-style: italic;
-  font-size: 18px;
-  color: #fff;
-  letter-spacing: 0.18em;
-  margin-bottom: 24px;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  opacity: 0.85;
-}
-.hero-year-tag::before {
-  content: '';
-  width: 32px;
-  height: 2px;
-  background: var(--c-red-light);
-}
-.hero-club-name {
+}.hero-club-name {
   display: block;
   max-width: none;
   font-size: clamp(52px, 6vw, 86px);
