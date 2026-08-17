@@ -1,0 +1,16 @@
+{
+  "name": "gbc-website",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix site run dev",
+    "build": "npm --prefix site run build",
+    "start": "npm --prefix site run start",
+    "lint": "npm --prefix site run lint",
+    "cf:build": "npm --prefix site run cf:build",
+    "preview": "npm --prefix site run preview",
+    "deploy": "npm --prefix site run deploy",
+    "cf-typegen": "npm --prefix site run cf-typegen",
+    "add-project": "npm --prefix site run add-project",
+    "install:site": "npm --prefix site install"
+  }
+}

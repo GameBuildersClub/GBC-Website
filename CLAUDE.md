@@ -1,7 +1,7 @@
 # GBC Website — Claude guidance
 
 ## Project overview
-Next.js 15 (App Router, Turbopack) website for the UGA Game Builders Club. TypeScript strict mode. Deployed on Vercel. Root directory for Vercel is `site/`.
+Next.js 16 (App Router, Turbopack) website for the UGA Game Builders Club. TypeScript strict mode. Deployed to Cloudflare Workers via the OpenNext adapter (`@opennextjs/cloudflare`). Root directory for the build is `site/`.
 
 ## Key architecture decisions
 - **All page UI lives in one file**: `site/src/app/components/SitePages.tsx` (~473 lines). Every page component (`HomePage`, `GamesPage`, `GameDetailPage`, etc.) is exported from here. Do not split this file unless explicitly asked.

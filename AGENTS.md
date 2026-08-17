@@ -1,7 +1,7 @@
 # GBC Website — Codex / OpenAI agent guidance
 
 ## Project
-UGA Game Builders Club website. Next.js 15, App Router, TypeScript strict. Vercel deployment with root directory `site/`.
+UGA Game Builders Club website. Next.js 16, App Router, TypeScript strict. Deployed to Cloudflare Workers via `@opennextjs/cloudflare`, with root directory `site/`.
 
 ## Key files
 | File | Purpose |
@@ -11,6 +11,8 @@ UGA Game Builders Club website. Next.js 15, App Router, TypeScript strict. Verce
 | `site/src/app/globals.css` | All styles |
 | `site/public/assets/` | Images and icons |
 | `site/next.config.ts` | Image remote patterns for external domains |
+| `site/wrangler.jsonc` | Cloudflare Worker name, compat flags, bindings |
+| `site/open-next.config.ts` | OpenNext adapter config (caching overrides) |
 
 ## Before making changes
 1. Read `SitePages.tsx` fully before editing — many components share state and data.

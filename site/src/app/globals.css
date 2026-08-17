@@ -403,36 +403,47 @@ p { margin: 0; }
 }
 .hero-indicator {
   position: absolute;
-  bottom: 28px;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 6;
   display: flex;
-  gap: 10px;
+  gap: 0;
 }
+/* 32x44 hit area around an 11px dot — the bare dot was far below any touch minimum. */
 .hero-indicator button {
+  width: 32px;
+  height: 44px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.hero-indicator button::after {
+  content: '';
   width: 11px;
   height: 11px;
   border-radius: 50%;
   background: rgba(215,215,215,0.5);
-  border: none;
-  padding: 0;
-  cursor: pointer;
   transition: background 200ms ease, transform 200ms ease;
 }
-.hero-indicator button.active {
+.hero-indicator button.active::after {
   background: #fff;
   transform: scale(1.1);
 }
 
+/* Below 900px the hero grows to fit its content instead of clipping it —
+   .hero-carousel has overflow:hidden, so a fixed height cut off the CTAs. */
 @media (max-width: 900px) {
   .hero-content, .hero-caption-block { padding-left: 32px; padding-right: 32px; }
-  .hero-carousel { height: 540px; }
-  .hero-content { padding-top: 100px; }
+  .hero-carousel { height: auto; min-height: 540px; }
+  .hero-content { padding-top: 100px; padding-bottom: 96px; }
 }
 @media (max-width: 560px) {
-  .hero-carousel { height: 460px; }
-  .hero-content { padding-top: 64px; }
+  .hero-carousel { min-height: 460px; }
+  .hero-content { padding-top: 64px; padding-bottom: 88px; }
   .hero-caption-block { bottom: 16px; }
 }
 
@@ -770,9 +781,14 @@ p { margin: 0; }
   flex-shrink: 0;
   color: var(--c-ink);
 }
+/* Negative block margin + matching padding grows the tappable input out over the
+   bar's padding (27px -> full bar height) without moving the text. */
 .search-bar input {
   flex: 1;
   min-width: 0;
+  align-self: stretch;
+  margin-block: -14px;
+  padding-block: 14px;
   border: none;
   background: transparent;
   outline: none;
@@ -1190,7 +1206,9 @@ p { margin: 0; }
 }
 @media (max-width: 560px) {
   .games-main { padding: 20px 16px 48px; }
-  .games-grid { grid-template-columns: 1fr; gap: 24px; }
+  /* minmax(0,...) not 1fr: a bare 1fr track takes an `auto` minimum, so one long
+     game title (min-content 466px) stretched the column past the viewport. */
+  .games-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .results-meta { flex-direction: column; align-items: flex-start; gap: 8px; }
   .results-meta-right { flex-wrap: wrap; gap: 4px; row-gap: 8px; }
   .results-meta-right > span:not(.results-divider) { display: none; }
@@ -2578,7 +2596,7 @@ p { margin: 0; }
     bottom: 78px;
   }
   .hero-indicator {
-    bottom: 28px;
+    bottom: 12px;
   }
   .bottom-cta {
     grid-template-columns: 1fr;
@@ -2811,7 +2829,7 @@ p { margin: 0; }
 .hero-club-name {
   display: block;
   max-width: none;
-  font-size: clamp(44px, 6vw, 86px);
+  font-size: clamp(52px, 6vw, 86px);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 0.94;
@@ -2850,9 +2868,51 @@ p { margin: 0; }
   color: rgba(255,255,255,0.92);
 }
 .hero-tagline { font-size: inherit; }
+
+/* ====== Touch tap targets ======
+   Scoped to coarse pointers so mouse-driven layouts keep their tighter sizing. */
+@media (pointer: coarse) {
+  .nav-socials { gap: 4px; }
+  .nav-social,
+  .nav-social:last-of-type,
+  .nav-mobile-socials a {
+    width: 44px;
+    height: 44px;
+  }
+  .nav-hamburger,
+  .sidebar-close,
+  .search-bar button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .filter-group-head,
+  .filter-option,
+  .filters-trigger,
+  .page-size-btn,
+  .back-link {
+    min-height: 44px;
+  }
+  .page-size-btn { padding: 5px 14px; }
+  .back-link { align-items: center; }
+  /* gap collapses because the taller rows now provide their own separation */
+  .footer-links { gap: 0; }
+  .footer-links a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .footer-socials { gap: 8px; }
+  .footer-socials a {
+    width: 44px;
+    height: 44px;
+  }
+}
 @media (max-width: 600px) {
-  .hero-club-name { font-size: clamp(56px, 18vw, 96px); }
+  /* Tops out near the base rule's floor so there's no jump across the 600px edge. */
+  .hero-club-name { font-size: clamp(44px, 14vw, 56px); }
   .hero-word-shift { padding-left: 12px; }
   .hero-word-last { padding-left: 24px; }
   .hero-word-last::after { left: 20px; right: -14px; height: 20px; bottom: -14px; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; }
 }
