@@ -79,7 +79,6 @@ const OFFICERS = [
   { name: "Caleb", initials: "C", role: "Vice President" },
   { name: "David", initials: "D", role: "Projects Officer" },
   { name: "Cal", initials: "C", role: "Workshops Officer" },
-  { name: "TBD", initials: "?", role: "Finance Officer" },
   { name: "Divesh", initials: "D", role: "Web Dev Officer" },
 ];
 const MEETINGS = [{ day: "Wednesday", kind: "Workshop / Social / Project Work", time: "6:30 - 8:00 PM", location: "SLC 345 · Hybrid" }];
