@@ -1,6 +1,6 @@
 import projectsData from "../data/projects";
 
-export const BASE_URL = "https://ugagbc.com";
+export const BASE_URL = "https://gamebuildersclub.com";
 export const SITE_NAME = "Game Builders Club";
 export const SITE_DESC =
   "The University of Georgia's student-run game development club. We build games, run jams, and teach each other everything from code to art to music.";

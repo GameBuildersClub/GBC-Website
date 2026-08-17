@@ -34,26 +34,41 @@ Game data lives in `site/src/app/data/projects.ts`. Append a new entry to the ar
 
 Config lives in `site/wrangler.jsonc` (Worker name, bindings) and `site/open-next.config.ts` (adapter/caching).
 
-Manual deploy:
+Live at **https://gamebuildersclub.com** (custom domain attached to the Worker).
+
+Manual deploy — works from the repo root or from `site/`:
 
 ```bash
-cd site
-npx wrangler login   # once
+npx wrangler login   # once, from site/
 npm run deploy
 ```
 
-Automatic deploys use **Workers Builds**: in the Cloudflare dashboard, Workers &
-Pages → the `gbc-website` Worker → Settings → Builds → connect this repo with
+### Workers Builds (automatic deploys)
 
-| Setting        | Value                 |
-| -------------- | --------------------- |
-| Root directory | `site`                |
-| Build command  | `npm run cf:build`    |
-| Deploy command | `npx wrangler deploy` |
+Cloudflare dashboard → Workers & Pages → the `gbc-website` Worker → Settings → Build.
+Because the npm project lives in `site/`, the build settings must point at it:
 
-`cf:build` runs the OpenNext build **and** `populateCache local`, which copies the
-prerendered pages into `.open-next/assets` so the deployed Worker can answer them
-from static assets. Skipping that step still works but makes every request boot the
-Next.js server.
+| Setting         | Value                 |
+| --------------- | --------------------- |
+| Root directory  | `site`                |
+| Install command | `npm ci`              |
+| Build command   | `npm run cf:build`    |
+| Deploy command  | `npx wrangler deploy` |
+
+If you would rather leave **Root directory** at the repo root, use these instead —
+`ci:build` installs `site/`'s dependencies first, which a root-level install does not do:
+
+| Setting        | Value             |
+| -------------- | ----------------- |
+| Build command  | `npm run ci:build`  |
+| Deploy command | `npm run ci:deploy` |
+
+Two things that will silently break a deploy:
+
+- **`npm run build` is not enough.** It only runs `next build`; it never produces a
+  Worker. Always use `cf:build` / `ci:build`.
+- **`cf:build` also runs `populateCache local`**, which copies the prerendered pages
+  into `.open-next/assets`. Without it the site still works, but every request boots
+  the Next.js server instead of being answered from static assets.
 
 Pushes to `main` then build and deploy; other branches get preview URLs.

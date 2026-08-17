@@ -11,6 +11,8 @@
     "deploy": "npm --prefix site run deploy",
     "cf-typegen": "npm --prefix site run cf-typegen",
     "add-project": "npm --prefix site run add-project",
-    "install:site": "npm --prefix site install"
+    "install:site": "npm --prefix site install",
+    "ci:build": "npm --prefix site ci && npm --prefix site run cf:build",
+    "ci:deploy": "npm --prefix site run deploy:only"
   }
 }
