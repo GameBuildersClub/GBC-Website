@@ -209,7 +209,9 @@ p { margin: 0; }
   color: #fff;
 }
 
-@media (max-width: 1000px) {
+/* 1100px, not 1000px: the full-size nav needs 1091px, so a lower breakpoint left
+   1001-1090px overflowing horizontally (iPad Pro landscape, small laptops). */
+@media (max-width: 1100px) {
   .nav-inner { grid-template-columns: auto 1fr auto; padding: 0 24px; gap: 18px; }
   .nav-brand { padding-right: 8px; }
   .nav-brand span,
@@ -2348,6 +2350,10 @@ p { margin: 0; }
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 24px;
   margin-top: 32px;
+  /* Caps the row at three cards so a five-person board reads 3 + 2 rather than
+     4 + 1. Done with width instead of a fixed column count because the avatars are
+     aspect-ratio: 1 — wider columns would make every card taller too. */
+  max-width: 912px;
 }
 .value-card,
 .simple-card {
