@@ -28,9 +28,10 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [{ url: OG_IMAGE, width: OG_IMAGE_W, height: OG_IMAGE_H, alt: `${SITE_NAME} — UGA` }],
   },
+  // Kept for the card format itself — Slack, Discord and others read these tags —
+  // but no longer advertises an X account.
   twitter: {
     card: "summary_large_image",
-    site: "@GameBuilderClub",
     title: SITE_NAME,
     description: SITE_DESC,
     images: [OG_IMAGE],

@@ -12,7 +12,6 @@ export const CONTACT_EMAIL = "ugagbc@gmail.com";
 export const SOCIAL_URLS = [
   "https://discord.gg/ZZU5xQbv8K",
   "https://www.instagram.com/gamebuildersclub/",
-  "https://x.com/GameBuilderClub",
 ];
 
 export const ORG_ID = `${BASE_URL}/#organization`;

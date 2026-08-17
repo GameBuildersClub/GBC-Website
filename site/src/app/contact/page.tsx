@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Contact",
   description: "Get in touch with Game Builders Club — find us on Discord, Instagram, or email us at ugagbc@gmail.com.",
   alternates: { canonical: "/contact" },
-  openGraph: pageOg("/contact", "Contact", "Reach GBC on Discord, Instagram, X, or by email."),
+  openGraph: pageOg("/contact", "Contact", "Reach GBC on Discord, Instagram, or by email."),
 };
 
 export default function Contact() {

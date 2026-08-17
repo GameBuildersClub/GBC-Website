@@ -66,7 +66,7 @@ each semester. Engines used include Godot, Unity, and Unreal Engine.
 - [About](${BASE_URL}/about): Club history, values, and the current officer board.
 - [How It Works](${BASE_URL}/how-it-works): Joining, the semester timeline, meeting schedule, and what the club does.
 - [FAQ](${BASE_URL}/frequently-asked-questions): Common questions about experience, commitment, engines, and fees.
-- [Contact](${BASE_URL}/contact): Discord, Instagram, X, and email.
+- [Contact](${BASE_URL}/contact): Discord, Instagram, and email.
 
 ## Games (${games.length})
 
@@ -80,7 +80,6 @@ ${faqs.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
 
 - Discord (primary hub): https://discord.gg/ZZU5xQbv8K
 - Instagram: https://www.instagram.com/gamebuildersclub/
-- X / Twitter: https://x.com/GameBuilderClub
 - Email: ugagbc@gmail.com
 `;
 
