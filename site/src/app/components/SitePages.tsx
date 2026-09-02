@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import projectsData from "../data/projects";
 import faqs from "../data/faqs";
 
-type IconName = "arrow-right" | "arrow-up-right" | "chevron-right" | "search" | "discord" | "instagram" | "youtube" | "github" | "itch" | "steam" | "mail" | "pin" | "clock" | "controller" | "sparkle" | "users" | "code" | "x" | "unreal" | "custom" | "menu" | "expand";
+type IconName = "arrow-right" | "arrow-up-right" | "chevron-right" | "search" | "discord" | "instagram" | "youtube" | "github" | "itch" | "steam" | "mail" | "pin" | "clock" | "controller" | "sparkle" | "users" | "code" | "x" | "unreal" | "custom" | "menu" | "expand" | "download";
 type Game = {
   id: number;
   slug: string;
@@ -115,6 +115,7 @@ function Icon({ name, size = 18, stroke = 2 }: { name: IconName; size?: number; 
     sparkle: <path d="M12 2v6M12 16v6M2 12h6M16 12h6" />,
     users: <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></>,
     code: <path d="m16 18 6-6-6-6M8 6l-6 6 6 6" />,
+    download: <><path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" /></>,
     x: <path d="M4 4 20 20M20 4 4 20" />,
     expand: <><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></>,
     custom: <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />,
@@ -512,7 +513,7 @@ function Officers() {
 }
 
 export function HowPage() {
-  return <PageShell><main className="page-enter standard-page"><PhotoHero title="How It Works" body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><h2 className="section-title dark">How to get involved</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg" target="_blank" rel="noreferrer"><Icon name="discord" size={20} /> Join Discord</a></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
+  return <PageShell><main className="page-enter standard-page"><PhotoHero title="How It Works" body="Membership is free. No application. Most members are on a team within their first three weeks." /><section className="section"><div className="container"><h2 className="section-title dark">How to get involved</h2><div className="steps-list">{STEPS.map((s) => <div key={s.num} className="step-card"><div className="num">{s.num}</div><h4>{s.title}</h4><p>{s.body}</p></div>)}</div><div className="join-actions"><a href="https://discord.gg/ZZU5xQbv8K" className="btn btn-discord btn-lg" target="_blank" rel="noreferrer"><Icon name="discord" size={20} /> Join Discord</a><a href="/assets/gbc-pitch-template.docx" className="btn btn-ghost btn-lg" download><Icon name="download" size={20} /> Pitch Template</a></div></div></section><Meetings /><WhatWeDo /><BottomCta /></main></PageShell>;
 }
 
 function Meetings() {
